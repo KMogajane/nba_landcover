@@ -1,0 +1,412 @@
+---
+title: "Pressures to biodiversity across South African biomes as captured through land cover data."
+title-block-banner: "#A7A9AC"
+title-block-banner-color: white
+author:
+  - name:
+      given: Kagiso K.
+      family: Mogajane
+    orcid: 0000-0003-4131-5634
+    affiliations:
+      - ref: af1
+      
+  - name:
+      given: Anisha
+      family: Dayaram
+    orcid: 0000-0003-4131-5634
+    affiliations:
+      - ref: af1
+      - ref: af2
+      
+  - name:
+      given: Andrew L.
+      family: Skowno
+    orcid: 0000-0003-4131-5634
+    affiliations:
+      - ref: af1
+      - ref: af3
+      
+  - name:
+      given: Stephni
+      family: van der Merwe
+    orcid: 0000-0003-4131-5634
+    affiliations:
+      - ref: af1
+      - ref: af4
+      
+  - name:
+      given: Maphale
+      family: Monyeki
+    orcid: 0000-0003-4131-5634
+    affiliations:
+      - ref: af1
+
+affiliations:
+  - id: af1
+    number: 1
+    name: South African National Biodiversity Institute
+  - id: af2
+    number: 2
+    name: Restoration and Conservation Biology Research Group, Centre for African Ecology, School of Animal, Plant & Environmental Sciences, University of the Witwatersrand, Johannesburg, South Africa
+  - id: af3
+    number: 3
+    name: Plant Conservation Unit, Department of Biological Sciences, University of Cape Town, Cape Town, South Africa
+  - id: af4
+    number: 4
+    name: Centre for Statistics in Ecology, Environment and Conservation, Department of Biological Sciences, University of Cape Town, Cape Town, South Africa 
+
+date: September 2025
+bibliography: references.bib
+csl: annals-of-the-new-york-academy-of-sciences.csl
+citation:
+  type: webpage
+  container-title: National Biodiversity Assessment 2025
+  publisher: South African National Biodiversity Institute
+  url: http://nba.sanbi.org.za/
+appendix-cite-as: display
+google-scholar: true
+format: 
+  html:
+    crossref:
+      fig-prefix: Figure
+      tbl-prefix: Table
+      ref-hyperlink: true
+      fig-labels: arabic
+      tbl-labels: arabic
+      subref-labels: alpha a
+      title-delim: "."
+    toc: true
+    toc-location: right
+    toc-depth: 4
+    toc-expand: true
+    theme: 
+      - default 
+      - custom.scss
+language:
+  section-title-footnotes: Notes
+  section-title-citation: Recommended citation
+footnotes-hover: true
+reference-location: document
+link-external-newwindow: true
+callout-icon: false
+execute:
+  echo: false 
+  warning: false 
+  message: false
+---
+
+------------------------------------------------------------------------
+
+## Approach - move to the bottom
+
+This report summarises trends in the extent of land cover change for every biome from 1990 to 2022 Land Use and Land Cover datasets. The aim of this report is to track loss of natural habitat and the drivers behind the loss.
+
+We use the National Land Cover 7 class version prepared by the South African National Biodiversity Institute (SANBI) for 1990, 2014, 2018, 2020 ad 2022, based on the National Land Cover products served by the Department of Forestry, Fisheries and the Environment), reclassified by SANBI from 72 classes to 7 classes.\
+The re-classified National Land Cover 7 classes are described as follows:\
+1 = Natural or near natural ecosystems
+
+2 = Secondary-natural (previously cropland or mine or built-up, now re-vegetated partially)
+
+3 = Artificial-waterbodies (dams and water treatment)
+
+4 = Built-up (villages, urban, industrial, commercial and infrastructure)
+
+5 = Cropland
+
+6 = Mine
+
+7 = Plantation (alien timber and pulp plantations)
+
+Below we summaries description of each land cover class used in this report and whether they are classified as natural or non-natural.
+
+| Land cover class | Description | Natural/ Non-natural classification |
+|------------------------|------------------------|------------------------|
+| Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
+| Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
+| Artificial-waterbodies | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
+| Croplands | Land actively used for crop production, including field crops, orchards, vineyards, pivot and non-pivot irrigation, and intensive farming such as feedlots. | Non-natural |
+| Built-up | Includes all settlements (formal, informal, villages), commercial, and industrial areas, with roads, buildings, and other infrastructure replacing natural cover. | Non-natural |
+| Plantation | Areas planted with non-native tree species for timber production, including mature plantations and recently harvested stands. | Non-natural |
+
+: Table 1. Descriptions of the land cover classes used in this report and whether the class is classified as natural or non-natural.
+
+```{r}
+#| label: tbl-ref
+#| classes: plain
+#| tbl-cap: Table 2 . Remaining natural habitat per biome based on land cover datasets between 1990 – 2022 presented as aerial cover in km2 and (percentage cover). The table includes the recent rate of habitat loss between 1990 and 2022. All extents are presented in square kilometres (km2). Note this calculation assumes that all remaining natural areas are in a good condition with 1750 being the reference year before human development.  *Indicates the first land cover map used in this report.
+
+library(readxl)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+# Read Excel with headers
+file_path <- "C:/Users/K.Mogajane/Downloads/Book1.xlsx"
+df_raw <- read_excel(file_path, sheet = "Sheet1", col_names = TRUE)
+
+# Rename first column to "Biome"
+names(df_raw)[1] <- "Biome"
+
+# Clean table
+df_clean <- df_raw %>%
+  # remove rows where Biome is NA or "Time between LULC versions"
+  filter(!is.na(Biome), Biome != "Time between LULC versions") %>%
+  # replace NA in all columns with blank
+  mutate(across(everything(), ~ ifelse(is.na(.), "", as.character(.))))
+
+# Render cleaned table
+df_clean %>%
+  kable("html", escape = FALSE, caption = " ") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+
+```
+
+## Summary
+
+The overall extent of natural areas remaining in 2022 varies greatly per biome; only 33% of the Indian Ocean Coastal Belt, 58% of Grassland and 67% of Fynbos are in a natural state (Table 1). All the other biomes are in a significantly better overall state with over 80% remaining natural habitat. Recent habitat loss (from 1990 to 2022) varies across biomes with some showing a high rate of recent habitat loss. The Indian Ocean Coastal Belt biome has lost 0.66% of its natural habitat per year between 1990 and 2022, and 0.27% of the Grassland natural habitat has been lost every year between 1990 to 2022. Within the same period, the Fynbos biome has lost 0.19% of its natural habitat per year, trailing behind the Fynbos biome is the Savanna biome losing 0.13% of its natural habitat per year, followed by Azonal Vegetation with a loss of 0.13% per year.
+
+While all other biomes have lost less than 0.1% of their natural habitat per year, this still contributes to a steady, long-term reduction in natural ecosystems across the country, reflecting a persistent national trend of habitat decline even in biomes where change may be subtle or difficult to detect.
+
+![Table2. The key drivers of habitat loss for mainland South Africa prior to 1990 and between 1990 and 2022, based on the land cover change dataset. This table does not show transitions between all classes, it summarises all transitions between natural areas and anthropogenic land cover / landuse classes.](imgs/Plots/Historical%20and%20recent%20habitat%20loss%20-%20country.png){fig-align="center" width="807"}
+
+## Biome summaries
+
+::: {.panel-tabset group="language"}
+### Albany Thicket
+
+The Albany Thicket biome is a dense formation of evergreen succulent and woody shrubs and trees centred in southeast South Africa. It is an ancient biome that is thought to have been widespread in the Eocene (@cowling2005 ) and forms part of the Maputaland-Pondoland-Albany Global Biodiversity Hotspot.
+
+The biome has 90% (31 660 km2) of its natural habitat remaining (Table 2) according to the 2022 land cover data. It has one of the lowest recent habitat losses since 1990 to 2022 compared to other biomes such as the Fynbos and Indian Ocean Coastal Belt. The rate of habitat loss was 0.06% (20.70 km2) per year. Historically, croplands were responsible for large losses in the extent of natural habitat compared to other pressures. Cropland decreased in extent as both secondary natural areas and build-up areas have increased (Figure 1).
+
+Land cover data from 1990 to 2022 indicate several distinct trends in the Albany Thicket biome. Between 1990 and 2014, cropland extent declined steadily, while secondary-natural vegetation increased (Figure 1), likely reflecting a shift away from crop production towards wildlife ranching and rangeland herbivory (@llyod2022). Built-up areas and artificial waterbodies also declined slightly during this period, while plantations and mining areas remained largely unchanged (Figure 1). However, from 2014 to 2022 this pattern shifted to croplands expanding, coinciding with a decline in secondary-natural vegetation particularly in areas associated with irrigation development and citrus farming (ref). Built-up areas increased during this later period, while mining showed and plantation extents showed only minor increases.
+
+The observed expansion of the secondary natural class reflects intertwined historical, political, and ecological processes. In the Bathurst area, @stickler2014 link the decline of pineapple cultivation in the 1940s–1950s and the broader reduction in croplands to mid-1990s land reform, which aimed to return land to Black South Africans dispossessed under apartheid. This facilitated the regrowth of some vegetation on formerly cultivated land, while revised land-use objectives on urban commonages (1998–2004) promoted subsistence wood harvesting which also indirectly favoured transitions from intensive land use to another drivers of habitat loss through goat farming/ pastoralism which is a key pressure to the succulent Thicket vegetation which results in an altered state of the natural vegetation to resemble a pseudo-karoo or grassy state @lechmere-oertel004
+
+@hall2003 documented a shift from mined to semi-natural states at the Loerie limestone quarry in the Loerie area, where passive revegetation has taken place since the 1980s in woody dominated thicket where passive regeneration is feasible in these thicket types, using topsoil from adjacent intact thicket. This led to a steady increase in woody cover and a decline in herbaceous and early successional species, achieving 46% species similarity to intact thicket after 16 years. These patterns underscore how land-use change, driven by socio-political reform and low-intensity restoration, has facilitated the re-establishment of woody, secondary natural vegetation across previously degraded or cultivated areas.
+
+It is important to note that while land cover changes in recent decades have not been pronounced, most of the arid and valley thicket ecosystem types were cleared and overutilized before satellite monitoring started. Historical overstocking of livestock has likely led to irreversible vegetation changes in the thicket biome ( @lechmere-oertel2005; @rutherford2014). Because thicket, especially the succulent and slow-going components, has low regenerative capacity, the vegetation cannot return to its previously intact state without human intervention ( @lechmere-oertel2005; @carvalho2022 ). Luckily, restoration efforts can be successful when active restoration is applied with protection of the vegetation over time (@mills2006; @del_rio-mena2021; @galuszynski2022). However, continued goat farming, of which South Africa is the leading producer of mohair, and sheep farming remains key pressures to the remaining rangelands in thicket. Therefore, what is currently mapped as “natural” and “secondary natural” in the land cover data sets, might reflect thicket in various stages of degradation, not captured by the land cover datasets. The 2022 land cover data (Figure 2a) show that majority of the thicket is classified more natural than non-natural, however, within the non-natural classification, the key pressure in the biome is cropland, secondary-natural vegetation which might be in different degradation states (ref) (Figure 2b).
+
+![Figure 1. Proportional extent of pressures within the land cover in the Albany Thicket between 1990 and 2022.](imgs/Plots/Albany%20thicket.png){fig-align="center" width="664"}
+
+### Desert
+
+The Desert biome occupies a small portion of the extreme northwest of the country, forming the southernmost extent of the Namib Desert. The Richtersveld region, which includes both Succulent Karoo and Desert ecosystem types (ref), and forms part of the Succulent Karoo Global Biodiversity Hotspot ([Mucina and Rutherford, 2006]{.underline})
+
+Most of the Desert biome’s, 98% (6132 km2), natural habitat is remaining, according to the 2022 land cover data (Table 2). In comparison to other biomes, the Desert has the least habitat loss (0.025% / 3.69 km2) per year (Table 1). Mining is the key pressure in this biome; however, the land cover suggests there has been a decline in extent since the 1990 dataset, likely due to abandoned mines. The expansion of built-up areas likely contributed to the loss of natural habitat as mining declined in extent.
+
+From 1990 to 2014, mining and cropland areas declined, while secondary-natural vegetation and artificial waterbodies showed slight increases within the Desert biome (Figure 3). Plantations and built-up areas remained largely unchanged. Between 2014 and 2022, built-up areas increased, while artificial waterbodies declined and secondary-natural vegetation expanded slightly. Mining continued to decline in extent. Cropland and plantation cover remained relatively unchanged.
+
+The patterns in the Cropland extent decline (Figure 3), could largely be due to water scarcity (as there is a decline in artificial waterbody extent (Figure 3), soil degradation, and limited agricultural viability in Desert ecosystems, this contraction was accompanied by a gradual expansion of secondary-natural vegetation (Figure 3), likely driven by the abandonment of farmlands and mine-closures, allowing for passive ecological recovery ([Mutanga et al., 2024; Urban et al., 2024]{.underline}).  The decline of mining extent may have been driven by global fluctuations in mineral prices and regulatory tightening ultimately leading to the closure or downscaling of several mines, particularly those with shallow or exhausted deposits ( @lotchner2013; Theobald et al., 2025). South Africa also downscaled mines, often leading to abandonment of the mining sites ( @nel2002; @lotchner2013 Marais, 2013). Through land cover data, we observe a trend where a decline in mine extent, is correlated to an increase in the increase of secondary-natural extent (Figure 3) in the same time periods with the mine closures, suggesting the abandoned mining sites may be passively re-vegetating. Built-up areas expansion around former mining towns and renewable energy zones reflects the growth of peri-urban settlements, infrastructure developments, and new energy installations such as solar farms in remote desert areas (@gaeatlholwe2023).  Studies from the United States, United Kingdom and India suggest that land requirements for renewable energy are far more than the land required for fossil fuel reliant energy (@gaeatlholwe2023), this means that more biodiversity is at large risk of loss die to more land requirements.
+
+Importantly, plantation forestry was effectively absent throughout the period, consistent with the ecological limitations of Desert biome including low soil nutrients, wind erosion, limited rooting depth, and high evapotranspiration (Mucina and Rutherford, 2006: Mutanga et al., 2024). Overall, the desert biome appears to be undergoing an ecological transition, marked by a retreat of intensive land uses and the emergence of a mosaic landscape of low-density settlement, natural vegetation recovery, and selective agricultural intensification where hydrological conditions allow. These dynamics are consistent with desertification-response models, which predict natural regrowth in previously disturbed zones under reduced human pressure (Urban et al., 2024; @gaeatlholwe2023 ).
+
+### Forest
+
+Indigenous forests in South Africa are small patches scattered mainly along the eastern and southern parts of the country from the coast extending inland to the escarpment of the country. However, pockets also occur in the western and northern provinces. They typically occur as small (\<10 ha) patches embedded within larger Fynbos, Grassland, Albany Thicket or Savanna biomes, though larger complexes are found in the Knysna area and in the Amathole mountain range (Mucina et. al 2006). The coastal forests of eastern South Africa make up part of the Maputaland-Pondoland-Albany Global Biodiversity Hotspot.
+
+The Forest biome has 82% of the natural habitat remaining. With a rate of recent natural loss of 0.084% per year between 1990 and 2022 (Table 2), plantation and croplands being the key drivers for this loss (Figure 5). Mining could be an emerging pressure in this biome; the land cover suggests that it has increased in 2018 covering a larger area with the biome.
+
+From 1990 to 2014, land cover data indicate an inverse relationship between plantations and secondary-natural vegetation within the Forest biome, with plantation extent declining steadily while secondary-natural vegetation expanded. During this period, cropland, built-up areas, and, to a lesser extent, mining also increased, while artificial waterbodies remained stable. Between 2014 and 2022, plantations and cropland declined overall, while secondary-natural vegetation and mining increased. Built-up areas showed some fluctuation but remained generally stable, and artificial waterbodies showed little change. 
+
+Beyond these drivers, patterns of habitat loss in forest ecosystems are also linked to multiple disturbances, both natural and anthropogenic. According to @geldenhuys2010, forest degradation and eventual habitat loss can follow stages of crown condition deterioration, where disturbance reduces canopy cover and alters species composition. This degradation opens the forest to invasive species and pioneer plants, which can further shift the ecosystem away from mature forest conditions. A notable dynamic is the distinction between natural forest regrowth and the "naturalisation" of indigenous trees in non-forest ecosystems. @g Geldenhuys (2011) explains that indigenous trees can colonise areas such as old agricultural lands, fire-suppressed grasslands, or gaps within plantations, leading to stands that may structurally resemble natural forest but differ in ecological function and origin. These "naturalised natural forests" may then be captures as secondary-natural vegetation by the land cover data as seen in Figure 5 below. These patterns suggest that while outright deforestation (e.g., for agriculture or mining) contributes to habitat loss, more subtle processes, such as degradation historical timber harvesting ( @karumbidza2006; Geldenhuys 2011).
+
+South Africa’s timber plantations are located either within or next to indigenous forest ( @karumbidza2006).  Despite the consistent decline in plantations from land cover data (Figure 5), studies such as @karumbidza2006 show that plantation extent increased in area between 1990 and 2002 by 11% in Mpumalanga, KwaZulu-Natal, and the Eastern Cape. However, in the Western Cape province there was a decline in plantation forestry due to decommisioning of the of approximately 450 km2 of plantation forestry by the Government forestry exit policy in 2001 (@tiroza2016).  Other pressures within the Forest biome that are not captured by the land cover, but may be classified as secondary-natural (Figure 5) due to the re-establishment of of Forests (Geldenhuys, 2011) include the harvesting of Non-Timber Forest Products (NTFP) such as bark for medicine, rope fibre, fuelwood and thatching ( @chirwa2008). Harversting for these NTFP can be highly destructive and result in increased tree mortality which ultimately results in deforestation due to increased poverty and increased demand, especially in rural livelihoods (Chidumayo et al., 1996; @chirwa2008).
+
+The natural extent of the Forest still occupies majority of the biome at nearly 4 000 km2 (82% of the biome) (Table 2 and Figure 6a). However, secondary-natural vegetation and plantations remain key pressures within the Forest biome (Figure 6b) driven largely timber and pulp industries, overharvesting, invasive species and other disturbances leading to loss of natural habitat ( @karumbidza2006; @geldenhuys2010, 2011).
+
+### Fynbos
+
+In this section, wewill firstly explore the pressures within the Fynbos at a biome level. Then address these pressures through the Renosterveld and the Fynbos vegetation groups.
+
+The Fynbos biome is globally recognised as a unique floral kingdom and Global Biodiversity Hotspot, with very high plant diversity and levels of endemism. However, only 67% of its natural habitat remains, and facing an average annual habitat loss rate of 0.19%. Multiple drivers contribute to this ongoing decline, as indicated by land cover data. Cropland emerges as the predominant pressure, having occupied the largest area within the biome since 1990. Over time cropland seems to have decreased as secondary natural area has increased, along with a proportionally smaller increase in built-up area.
+
+A recent study by @du_preez2025 assessed Indigofera genus to understand how plant species have adapted and diversified across the biome. Their findings reveal that the Fynbos biome is made up of two distinguishable vegetation groups, each shaped by unique soils, climate and fire regimes. The most important are Fynbos (found mostly on nutrient poor, sandy soil in mountain areas) and Renosterveld (found in nutrient richer, shale-based soils in lowlands). Although they often sit side by side on the landscape, these two ecosystems experience different pressures and support different plant communities. @du_preez2025 used Indigofera species as indicators of how plants have moved across these environments over millions of years. Some Indigofera groups have specialised in Fynbos, especially in montane sandstone habitats where frequent fires, low nutrients and isolation drive rapid plant diversification. Other groups are adapted to the Renosterveld which is less fire-prone but highly fertile and increasingly under threat from farming and development.  This evolutionary evidence from @du_preez2025 coupled with pressures unique to the Fynbos and Renosterveld vegetation groups provides justification to split our assessment of pressures in the Fynbos biome. Recognising that there are Strandveld and Shale Band vegetation groups within the Fynbos biome, studies such as Rebelo et al (2006) and \@cowlin Cowling et al (2023) indicate a close affinity of the Strandveld and the Shale Band vegetation to Fynbos, hence we have included the ecosystem types within those vegetation groups into the Fynbos vegetation our Fynbos/Renosterveld group split.
+
+**Fynbos vegetation**
+
+Here we include the Strandveld and Shale Band Vegetation within the larger Fynbos subgroup due to the close plant communities and geological and soil associations (Rebelo et al., 2006; Cowling et al., 2023).
+
+Fynbos vegetation is dominated by hard and fine-leaved shrubs that are adapted to nutrient-poor, acidic sandy soils (Rebelo et. al, 2006). Within this subgroup, Shale Band vegetation is found in lower slopes and valleys, while Strandveld occurs on alkaline, calcareous coastal sands and supports taller evergreen shrubs and succulents (Rebelo et al., 2006).
+
+Within the Fynbos vegetation, croplands, by far the most extensive land cover, declined in extent from 1990 to 2014, along with plantations and artificial waterbodies. During the same period, built-up areas and secondary-natural vegetation increased, while mining showed little to no change. Between 2014 and 2022, cropland and artificial waterbody extent fluctuated but generally declined. Built-up areas and secondary-natural vegetation continued to expand, and plantations showed an overall increase. Mining remained largely unchanged throughout.
+
+Ntshanga (2021) @ntshanga2021 highlight the severe habitat transformation and fragmentation affecting lowland ecosystems in the Fynbos Biome, driven primarily by urban expansion into lowland fynbos and Strandveld around Cape Town and coastal areas. This transformation has led to the isolation of remnant natural patches within heavily altered, human-dominated landscapes. In parallel, post-disturbance vegetation dynamics in the biome have contributed to shifts in land cover classifications. @holmes2020 show that the removal of invasive alien plants, particularly through spontaneous succession, can result in vegetation states dominated by native species, yet functionally and compositionally distinct from original fynbos. These shifts are often captured in land cover datasets as secondary natural vegetation, particularly where plantation cover declines following alien clearance. Ecological thresholds are crossed when prolonged invasion alters soil or suppresses key fynbos shrubs, leading to transitions toward herbland or novel fynbos community assemblages. @fill2017 reinforce this pattern, demonstrating that long-term restoration in fynbos shrublands does not always recover original biodiversity or structure, despite alien plant removal. Collectively, these studies illustrate how recovery trajectories, even when native-dominated, often produce altered states that contribute to increases in the secondary natural class while reflecting a legacy of ecological disturbance.
+
+In Figure 10, the built-up, Studies showed that Fynbos vegetation faces threats of habitat loss and fragmentation from urban development, agriculture, plantation forestry and the spread of invasive alien plants (@sandberg2016).
+
+![Figure 7. The proportional extent of pressures within the Fynbos biome between 1990 and 2022 land cover sets.](imgs/Plots/Fynbos%20vegetation%20group.png)
+
+```         
+# Install packages if not installed
+if (!require("treemap")) install.packages("treemap")
+if (!require("readxl")) install.packages("readxl")
+if (!require("dplyr")) install.packages("dplyr")
+
+# Load libraries
+library(readxl)
+library(dplyr)
+library(treemap)
+
+# Read your Excel file
+df <- read_excel("RenosterveldExampleFinal.xlsx", sheet = "Sheet1")
+
+# Prepare data for YEAR 2022
+df_2022 <- df %>%
+  filter(YEAR == 2022) %>%
+  mutate(group = ifelse(LC7_text == "Natural", "Natural", "Non-Natural"),
+         subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)) %>%
+  group_by(group, subgroup) %>%
+  summarise(value = sum(km2, na.rm = TRUE), .groups = "drop")
+
+# Define colour scheme (aligned with your LC7_text values)
+custom_colors <- c(
+  "Natural" = "green",
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Treemap plot
+treemap(df_2022,
+        index = c("group", "subgroup"),
+        vSize = "value",
+        type = "index",
+        palette = custom_colors[df_2022$subgroup]
+)
+```
+
+**Renosterveld vegetation**
+
+Renosteveld veetation is is characterized by a predominantly evergreen shrubs with a mix of grasses. It primarily occurs in the fertile lowlands within the Cape Floristic Region (Rebelo et al., 2006; @cousins2018 ).
+
+Between 1990 and 2014, cropland, plantation, and artificial waterbodies declined in extent within the Renosterveld, while secondary-natural areas increased notably largely due to decommisioning of the of approximately 45 000 hactares of plantation forestry by the Government forestry exit policy in 2001 (@tiroza2016 ). Built-up and mining cover remained largely unchanged. From 2014 to 2022, cropland initially declined before expanding again, while plantation and artificial waterbodies showed minor increases. Secondary-natural and built-up areas fluctuated over time. Mining extent remained relatively stable throughout.
+
+@ntshanga2021 examined patterns of habitat fragmentation in the Fynbos biome and noted significant transformation of the Renosterveld vegetation for agriculture, particularly in lowland areas. This has resulted in a landscape dominated by fragmented remnants embedded within cultivated lands. @kemper1999 explored the ecological consequences of this fragmentation by assessing plant community structure in Renosterveld fragments. While overall species richness did not show a consistent relationship with fragment size, larger fragments were more similar in community composition than smaller ones, suggesting a decline in ecological integrity with increasing fragmentation. These findings reflect a broader pattern in which remaining Renosterveld fragments often persist in a secondary natural state. The variation observed across fragment sizes supports the notion that many of these areas represent ecologically altered states, shaped by historical land-use change and ongoing edge effects, which are captured in land cover data as secondary natural vegetation.
+
+Drought within the Western Cape between 2015 and 2018 ( @pienaar2018; @mahlalela2020; @orimoloye2022 ) resulted in a decline in crop production, with a 14% decline across the agricultural industry within the Western Cape province particularly in the Renosterveld. This was due to reduced access to water resources ( @pienaar2018). These effects are couple with the decline in articfial waterbody and cropland decline in the 2014 and 2018 in the land cover data (Figure 9).
+
+![Figure 9. The proportional extent of pressures within the Renosterveld vegetation between 1990 and 2022 land cover sets.](imgs/Plots/RenosterveldF.png)
+
+```         
+# Install packages if not installed
+if (!require("treemap")) install.packages("treemap")
+
+# Load libraries
+library(readxl)
+library(dplyr)
+library(treemap)
+
+# Read your Excel file
+ren_sum <- read_excel("C:/Users/K.Mogajane/Downloads/RenosterveldExampleFinal.xlsx", sheet = "Sheet1")
+
+# Prepare data for YEAR 2022
+ren_sum <- ren %>%
+  filter(YEAR == 2022) %>%
+  mutate(group = ifelse(LC7_text == "Natural", "Natural", "Non-Natural"),
+         subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)) %>%
+  group_by(group, subgroup) %>%
+  summarise(value = sum(km2, na.rm = TRUE), .groups = "drop")
+
+# Define colour scheme (aligned with your LC7_text values)
+custom_colors <- c(
+  "Natural" = "green",
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Treemap plot
+treemap(ren_sum,
+        index = c("group", "subgroup"),
+        vSize = "value",
+        type = "index",
+        palette = custom_colors[ren_sum$subgroup]
+)
+```
+
+### Indian Ocean Coastal Belt
+
+The Indian Ocean Coastal Belt biome forms part of the Maputaland-Pondoland-Albany Global Biodiversity Hotspot and is a heterogenous complex of forest, mesic savanna and grassland vegetation communities; unique both ecologically and biogeographically. This biome’s range extends across the entire KwaZulu-Natal coast and small parts of the Eastern Cape’s northeastern coast.
+
+The Indian Ocean Coastal Belt has the least remaining natural habitat of all the biomes at 33% natural habitat remaining as of the 2022 land cover dataset. It has the highest rate of natural habitat lost for all biomes, losing 0.66% natural cover per year (Table 1). The land cover suggests that this loss of natural habitat is due to the high extent of built-up areas, croplands and plantations (Figure 11).
+
+From 1990 to 2014, built-up areas and plantations declined noticeably, while croplands and secondary-natural vegetation increased considerably. Mining and artificial waterbodies remained mostly stable, with a slight increase in artificial waterbodies. Between 2014 and 2022, cropland and secondary-natural vegetation initially increased but later declined, while plantation cover increased overall. Built-up areas fluctuated, showing a general decline by 2022. Mining and artificial waterbodies remained largely unchanged throughout.
+
+Coastal areas of the KwaZulu-Natal province are densely populated, and as a result, there are numerous economic activities that that result in the alteration of natural habitat ( @g Goble and Elst, 2015; @kznedtea2024 ). There have been increasing developments of residential areas and port facilities along the coast ( @g Goble and Elst, 2015), these developments contribute to habitat loss and the land cover has captured this, hence the increase in the extent of built-up areas (Figure 11).
+
+South Africa’s timber plantations are located either within or next to indigenous forest (Karumbidza, 2005) and sometimes within the Indian Ocean Coastal Belt. For example, in KwaZulu-Natal, in the Richard’s Bay area, there are industrial timber plantation that are where Indian Ocean Coastal Belt has been mapped in Mucina and Rutherford (2006) and Dayaram et al., in prep. @karumbidza2006 report that these plantation have led to habitat loss due to conversion of natural land to monoculture plantations. It is important to note that @karumbidza2006 highlighted that areas with industrial timber plantations seem to be infested with alien invasive trees such as Acacia mearnsii (Black wattle), among others. This invasion is because in commercial plantations, some alien trees species are used but they end up invading event areas where they were not meant to occupy ( @d de Wit et., al. 2001). The national invasive trees survey shows that the Indian Ocean Coastal Belt is the most alien invaded biome in the country ( @kotze2025).
+
+![Figure 11. The proportional extent of pressures within the Indian Ocean Coastal Belt biome between 1990 and 2022 land cover sets.](imgs/Plots/IOCB.png)
+
+### Grassland
+
+The Grassland biome occupies the central plateau of South Africa (Highveld) and lower elevation portions of the Eastern Cape and KZN interior. Most of the biome is dominated by C4 grasses, with C3 dominated grasslands restricted to montane areas. The Grassland biome is the second biome with the lowest natural habitat remaining. As seen in Table 1, it has 58% natural habitat remaining as of 2022 land cover, losing 0.265% per year. The land cover suggests that agricultural activity such as cropland and plantation are the main drivers of this loss of habitat. In addition, infrastructure is another contributor to the habitat loss as built-up areas also have a high extent within the biome and have been on a consistent rise since 1990 (Figure 13).
+
+Between 1990 and 2014, cropland and built-up areas declined slightly, while secondary-natural vegetation increased. Plantation, artificial waterbodies, and mining remained stable. From 2014 to 2018, cropland, artificial waterbodies, and mining declined, while secondary-natural, built-up, and plantation areas expanded. Between 2018 and 2020, cropland increased slightly, while secondary-natural, artificial waterbodies, and mining declined. Built-up and plantation remained unchanged. From 2020 to 2022, cropland and secondary-natural areas declined, plantation and artificial waterbodies increased, and built-up and mining remained stable.
+
+Habitat loss in grassland ecosystems is strongly driven by multiple land use pressures, with croplands exerting the most extensive impact due to the dominance of the agricultural sector (@slooten2023; @skowno2021a, @skowno2021b). Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified landscape fragmentation (@slooten2023) . In addition to these pressures, severe droughts in 2015 and 2018 likely forced a pause in cropping, reflected in declining cropland, while water shortages during these years also likely dried farm dams and reservoirs, driving a drop in artificial waterbodies (@orimoloye2022 ). Between 2018 and 2020, cropland recovered slightly as farming resumed (@orimoloye2022 ), but waterbodies continued to decline, indicating slow hydrological recovery.
+
+@niemandt2016 documented that pressures from timber plantations, developments for human settlements, and clearing land for potato and kiwifruit crops in the critically endangered Woodbush Granite Grassland (WGG), where timber contributed to an annual habitat loss rate of 3.1% between 1948 and 2008, increasing patch isolation and reducing patch size. Although the WGG is endangered and faces multiple pressures, some native species populations such as Aloes lettyae are stable in the natural habitats of the remnant patches of the ecosystem (@kremer-kohne2020) . @muller2021 further demonstrated that disturbance causes severe declines in native floristic diversity, with a 92% reduction in forb species richness and a 27% overall loss in plant diversity. Their findings also show a compositional shift toward disturbance-adapted species, though no evidence of widespread woody encroachment was found. Together, these studies highlight how land use change, especially through croplands, grazing, and plantation development, has driven direct transformation and fragmentation, shaping the observed patterns of cropland, plantation, and secondary-natural classes in Figure 13.
+
+Urban expansion also plays a significant role in habitat loss, particularly in regions such as Gauteng. @nhamo2021 reported that between 1986 and 2019, 553.23 km² (11.7%) of Critical Biodiversity Areas (CBAs) were converted to agricultural use and 209.70 km² (4.4%) to urban development. Ecological Support Areas (ESAs) experienced even greater transformation, with 972.44 km² (29.2%) lost to agriculture and 354.76 km² (10.7%) to urban land use. These figures highlight the scale of natural habitat loss resulting from expanding built-up areas, adding to the cumulative pressure already exerted by agriculture and plantations, and contributing to habitat loss. Farms’s performances in parts the North West province was assessed based on their outputs, to assess the performance and progress of land reform where farms were redistributed to historical marginalised people (Kirsten et al., 2016), A comparison was done between 2005 and 2010 performance and outputs and results indicated a decline in both categories which was attributed to many factors including limited resources to invest in and maintain infrastructure which ultimately led to not farming (Kirsten et al. 2016). Consequently, this may have allowed revegetation within the abandoned farms (Moyo and Ravhulani, 2022). Such studies (Kirsten et al. 2016; @moyo2022) help us understand the factors driving the increase in secondary-natural extent.
+
+Although low in proportional extent, it is worth noting that the highveld region (mainly Mpumalanga province) of the Grassland has numerous of mines which include 12-coal powered fire stations and at least 70 coal mines ( @kamolane-kgadima2024). In addition to driving habitat loss, these mines are reported to being the highest contributors to air pollution in within the region (@kamolane-kgadima2024 ). Other highveld regions include the Gauteng, Free State and North West provinces where mining also occurs and has contributed to habitat loss, water and air pollution due to acid mine drainage, particularly in Gauteng ( @minnaar2020).
+
+### Nama-Karoo
+
+The Nama-Karoo lies to the west of the Grassland biome and makes up much of the arid interior of the country. It receives summer rainfall and is dominated by drought tolerant shrubs and C3 grasses. The Nama-Karoo remains largely intact at the biome scale, with 98% of its natural habitat still present, reflecting the lowest annual rate of habitat loss across all biomes with, just 0.019% per year (Table 1). However, regardless of the small rate of loss, there are pressures impacting the biome. Land cover data suggests that since 1990, croplands have been the most impactful in this biome and continue to be, although they have reduced in extent (Figure 15). An emerging pressure that is increasing in impact is infrastructure due to the rise of built-up areas recorded by the land cover. They have especially increase since the 2014 land cover data set.
+
+Between 1990 and 2014, the extent of cropland, artificial waterbodies, built-up areas, and mining declined, while secondary-natural vegetation increased and plantation remained stable. From 2014 to 2022, cropland and mining declined overall, with some fluctuations. Secondary-natural vegetation and artificial waterbodies showed general increases, while built-up areas declined. Plantation cover remained relatively stable throughout. Although the Nama-Karoo appears ecologically stable at a biome scale, this masks significant shifts in how the land is being used. Historically, the biome was transformed through a combination of colonial-era livestock overstocking, widespread fencing, and water abstraction, which collectively disrupted the ecological processes that had previously maintained resilience in this arid system (Hoffman et al., 2018; @walker2018; @milton2021). Overgrazing from the 18th century onward led to significant shifts in vegetation structure, including the long-term loss of palatable grasses and shrubs, and a corresponding increase in unpalatable and invasive species (@milton2021).
+
+While cropland has declined in overall extent, it continues to exert the most pressure due to historical cultivation legacies. As noted by Hoffman et al. (2018), fields abandoned after peak cultivation in the mid-20th century are now gradually reverting to secondary-natural vegetation. This trend aligns with the observed increases in this cover type across several time intervals. However, a notable shift since 2014 has been the expansion of built infrastructure, particularly in the form of large-scale scientific and energy projects. The Square Kilometre Array (SKA), a major international radio astronomy installation near Carnarvon, has transformed over 130,000 hectares into a science-focused reserve with strict land use controls (Hoffman et al. 2018). Simultaneously, wind and solar energy developments have proliferated across the Upper Karoo and Bushmanland bioregions, areas that serve as ecologically important flat plains for seasonal movement of wildlife and connectivity between intact habitats (Hoffman et al. 2018, @gaeatlholwe2023). Threats posed by shale gas prospecting in this biome include reduced water availability ( @de_kock2017).
+
+These emerging pressures overlap with short-term fluctuations in land cover categories, such as intermittent increases in artificial waterbodies and croplands. Such patterns likely reflect temporary responses to rainfall variation, economic cycles, or energy development phases ( @walker2018). For instance, croplands may recover during wetter periods. @walker2018 emphasize that governance decisions, development priorities, and climate shifts increasingly shape land use in the Nama-Karoo, often in ways that outpace ecological recovery or institutional planning. The transformation of plains, drainage lines, and bioregional linkages particularly in the Upper Karoo, Lower Karoo, and Bushmanland; represents more than isolated land cover change; these are the corridors that support ecological flow across a biome already limited in formal protection (ref). The integration of large-scale projects into these areas introduces new socio-ecological dynamics that are not only spatially extensive but also structurally transformative (@walker2018).
+
+![Figure 15. The proportional extent of pressures within the Nama-Karoo biome between 1990 and 2022 land cover sets.](imgs/Plots/Nama-Karoo.png)
+
+### Succulent Karoo
+
+The Succulent Karoo biome is primarily located to the west of the western escarpment, extending along the western regions of the Northern and Western Cape provinces. It is a globally Biodiversity Hotspot characterised by exceptional succulent plant diversity. This biome is largely intact with 95% cover of natural habitat according to the 2022 land cover dataset (Table 2). The recent rate of habitat loss in this biome is low, at 0.030% natural habitat lost per year (Table 2), making it one of the lowest in the country. However small, pressures impacting this biome include croplands which have been the most impactful pressure and driver of natural habitat loss within this biome since 1990, as suggested by land cover data. Although croplands have declined in extent in recent years, reflected in the 2018 land cover, they are still a major driver of loss. Behind cropland is mining which has remained relatively stable since 1990 and had minor change (Figure 17).
+
+Between 1990 and 2014, the extent of cropland, mining, and artificial waterbodies declined, while secondary-natural vegetation increased. Built-up areas and plantations remained stable. From 2014 to 2022, cropland showed an overall decline with some fluctuation, while artificial waterbodies and secondary-natural vegetation generally increased. Built-up areas and mining also increased slightly over this period, and plantation extent remained unchanged.
+
+@jonas2004 investigated land use impacts in the Succulent Karoo, focusing on Namaqualand and other sub-regions like the Roggeveld, Hantam, Tanqua and Southern Karoo. The study identified extensive grazing as the dominant land use, with croplands and mining as other significant pressures within the study area. These findings show that these land uses contribute to the loss of biodiversity and natural habitat, reflecting the noted trend in the land cover datasets. A more recent study by @haarmeyer2010 examined how different grazing intensities affect plant diversity, species composition, and reproduction in the arid Succulent Karoo, particularly in the Knersvlakte area. Their results revealed that grazing reduced plant diversity and endemic species in intensive grazing sites and in moderate grazing sites some endemic species thrived. They discuss that a shift in plant communities due to heavy grazing favours hardy, non-native species over unique endemics and that reduced seedling survival limits future plant regeneration within the area. These findings may help explain the trend seen in the increasing trend of the secondary-natural class as not all native species regenerate after the disturbances.
+
+The Okiep District in Namaqualand was mined at multiple localities for copper for decades since the mid-1800s. According to @rozendaal2013, mining productivity began to decline rapidly from the mid-1990s and eventually ceased in 2007. Since the closure of the mines, the area has been under rehabilitation, the ceasing of mines is declined through a decline in mine extent on the land cover data (Figure 17) ( @rozendaal2013). Long-term environmental monitoring studies in Namaqualand provide further context to these patterns (Figure 17). Davis et al. (2017) used 30 years of satellite data to detect a significant extension of the growing season across many areas of Namaqualand, driven by shifts in phenology (there was an earlier start and later end to the season). This expansion of the growing period, particularly in the north of Namaqualand, is linked to a combination of factors including climate warming and land-use changes. The analysis found increases in vegetation productivity, especially in previously overgrazed or abandoned areas. David et al., (2017) findings align with those of Hongslo et al. (2009) , who documented a slow regeneration of vegetation cover and species richness in formerly cultivated or grazed communal lands like Concordia. While some areas remained compositionally degraded, others showed recovery particularly where active land management (e.g., fencing, reduced ploughing) had been implemented. This environmental history highlights that observed vegetation trends may not only reflect degradation but also slow ecological recovery due to altered management or climatic shifts (Hongslo et al., 2009; Davis et al., 2017) which could explain the drivers of the notable correlative increase and decline secondary-natural and cropland extents (Figure 17).
+
+![Figure 17. The proportional extent of pressures within the Succulent Karoo biome between 1990 and 2022 land cover sets.](imgs/Plots/Succelent%20Karoo.png)
+
+### Savanna
+
+The Savanna biome is the largest biome in South Africa and covers the majority of sub-Saharan Africa. South African Savannas span a wide rainfall gradient from the arid Kalahari savannas in the northwest to the mesic Zululand savannas in the east, which form part of the Maputaland-Polondoland-Albany biodiversity hotspot.
+
+The Savanna biome remains largely intact, with an estimated 80% of its natural habitat still present according to the most recent land cover data (Table 2). Habitat loss in this biome is relatively low, occurring at an annual rate of approximately 0.129% (74.60 km²). This loss is primarily driven by the expansion of croplands, which cover a greater extent of the biome than any other land cover pressure (Figure 19). Built-up areas exert the second greatest pressure and continue to expand, while plantations, though showing a slight decline in overall extent since the 2020 land cover, remain a notable driver of habitat transformation within the biome.
+
+From 1990 to 2014, both cropland and plantation areas decreased, while built-up areas and secondary-natural vegetation increased, particularly secondary-natural vegetation. Mining and artificial waterbodies showed slight declines during this period. Between 2014 and 2022, cropland expanded overall, and plantations and artificial waterbodies also increased slightly. Secondary-natural vegetation showed some fluctuation but remained relatively high, while mining declined slightly. Built-up areas remained generally stable.
+
+Across savanna ecosystems, the land cover changes reveal a strong correlative relationship between cropland, secondary natural vegetation, and built-up areas, where increases in cropland often coincide with rising secondary natural and built-up covers, and vice versa. Musetsho et al. (2021) examined land use and cover dynamics within the Vhembe Biosphere Reserve in Limpopo, focusing on critical biodiversity areas dominated by thickets, woodlands, grasslands, and indigenous forests. Their findings showed a 38.79% decline in thickets and dense bush alongside a 9.43% drop in subsistence agriculture, while woodland cover increased by 46.94% and built-up areas expanded modestly by 1.09%. These shifts reflect key drivers such deforestation, agricultural activities, and urban encroachment that align with broader patterns across the biome which are contributor to the habitat loss.
+
+The role of agriculture and grazing in shaping savanna vegetation structure and function further explains these land cover patterns. @botha2017 studied plant functional responses across a disturbance gradient from maize fields to adjacent rangelands, revealing that intensive farming favours disturbance-adapted ruderal species, while functional diversity remains higher in less disturbed rangelands due to a richer species pool. This shift toward opportunistic traits helps explain the increasing secondary natural vegetation class, reflecting that the ecosystems are altered but not entirely lost. Similarly, @rutherford2010 showed that in the arid Gordonia Duneveld of the southern Kalahari, long-term agricultural transformation creates persistent vegetation states difficult to reverse to original ecological state, driven by feedbacks from altered soil and physical conditions. Together, these studies highlight how land use changes such agriculture and urbanization, and drive habitat loss, patterns captured by the rise of the secondary natural and built-up classes in the land cover data observed for the biome. Mining and human settlements in Postmasburg ( @marais2018) expanded rapidly after 2010 when mining companies relocated worked to the town in 2011 with over 2 500 informal dwellings contributing to the growing area of built-up area captured by the landcover.
+
+![Figure 19. The proportional extent of pressures within the Savanna biome between 1990 and 2022 land cover sets.](imgs/Plots/Savanna.png)
+
+### Azonal Vegetation
+
+The Azonal Vegetation is a fragmented habitat across the country that is shaped by water and salinity. It is found in wetlands, floodplains, salt pans and riparian areas and each ecosystem differs sharply in vegetation. This vegetation plays pivotal ecological role in supporting both widespread species and local endemics especially in biodiversity-rich zones like the Fynbos and Drakensburg.
+
+This vegetation may face a range of pressures due to its widespread distribution and being its occurrence within various biomes. However, it remains largely intact with 81% of its natural habitat remaining and a rate of recent habitat loss of 0.126% per year (Table 1). Although largely intact, the rate of loss is the top 5 of all the biomes. The pressure impacting this biome as the land cover suggests is mainly croplands, although there has been a decline in recent land cover datasets (2014 and 2018), they remain the most impactful due to their high extent. Built-up areas are another pressure impacting the system and have increased in extent since the 2014 land cover dataset. Between 1990 and 2014, cropland, built-up, plantation, and mining areas declined, while secondary-natural vegetation and artificial waterbodies increased (Figure 21). From 2014 to 2022, cropland and secondary-natural areas fluctuated but showed an overall decline, while plantations and artificial waterbodies increased slightly. Built-up areas also declined, and mining remained relatively stable with a slight decrease toward the end of the period (Figure 21).
+
+The dominant land use pressure on Azonal Vegetation comes from croplands (Figure 21). Despite a notable reduction in cropland extent in recent years, as seen between 2014 and 2019 land cover datasets (Figure 21), its cumulative impacts remain significant ( @richardson2007). Agricultural activities adjacent to riparian areas can lead to habitat fragmentation, disrupt natural flooding cycles and increase the likelihood of invasive plant encroachment (@richardson2007).
+
+Recurrent droughts exacerbate these agricultural impacts, as they are a significant limiting factor for riparian plants, especially in arid and semi-arid areas where prolonged drought or flow reductions can lower water tables (Richardson et al., 2007). A study of the Olifants River over a 25-year period by @mashaba2025 illustrates these combined effects, showing how land use and altered water flows drive significant vegetation changes. The research found that heavy livestock grazing led to an increase in grazing-resistant grasses like Cynodon dactylon while palatable grasses such as Themeda triandra declined (@mashaba2025 ). Anthropogenic disturbances like agriculture and variable water flows create ideal conditions for invasive species to establish and proliferate ( @richardson2007; @mashaba2025). This was confirmed in the Olifants River study, which documented the spatial increase of invasive alien forbs (Verbena bonariensis) and woody plants (Acacia dealbata, Sesbania punicea) over the 25-year period, often linked to disturbances providing suitable substrate (@mashaba2025 ). Both floods and droughts impact these ecosystems; floods remove vegetation and deposit sediment, creating new habitats that can facilitate the incursion of alien plants (@richardson2007 ; @mashaba2025).
+
+South Africa’s timber plantations are located either within or next to indigenous forest and the Indian Ocean Coastal Belt ( @karumbidza2006) and sometimes Azonal Vegetation sits near the Forest ecosystems and as a result are impacted by introduction of plantation. For example, in KwaZulu-Natal, in the Richard’s Bay area, there are industrial timber plantation that are where Azonal Vegetation has been mapped in Mucina and Rutherford (2006) and Dayaram et al., in prep. @karumbidza2006 report that these plantation have led to habitat loss due to conversion of natural land to monoculture plantations, which has associated impacts in reduced streamflow and impacting on indigenous aquatic species. Although at the time of @karumbidza2006 publication there was very little proportion of plantation in the Azonal Vegetation (Figure 21); there increase in secondary-natural extent may suggest that the plantations.
+
+![Figure 21. The proportional extent of pressures within the Azonal Vegetation biome between 1990 and 2022 land cover sets.](imgs/Plots/Azonal.png){fig-align="center"}
+:::
