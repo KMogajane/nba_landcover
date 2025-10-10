@@ -97,70 +97,6 @@ execute:
 
 ------------------------------------------------------------------------
 
-## Approach - move to the bottom
-
-This report summarises trends in the extent of land cover change for every biome from 1990 to 2022 Land Use and Land Cover datasets. The aim of this report is to track loss of natural habitat and the drivers behind the loss.
-
-We use the National Land Cover 7 class version prepared by the South African National Biodiversity Institute (SANBI) for 1990, 2014, 2018, 2020 ad 2022, based on the National Land Cover products served by the Department of Forestry, Fisheries and the Environment), reclassified by SANBI from 72 classes to 7 classes.\
-The re-classified National Land Cover 7 classes are described as follows:\
-1 = Natural or near natural ecosystems
-
-2 = Secondary-natural (previously cropland or mine or built-up, now re-vegetated partially)
-
-3 = Artificial-waterbodies (dams and water treatment)
-
-4 = Built-up (villages, urban, industrial, commercial and infrastructure)
-
-5 = Cropland
-
-6 = Mine
-
-7 = Plantation (alien timber and pulp plantations)
-
-Below we summaries description of each land cover class used in this report and whether they are classified as natural or non-natural.
-
-| Land cover class | Description | Natural/ Non-natural classification |
-|------------------------|------------------------|------------------------|
-| Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
-| Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
-| Artificial-waterbodies | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
-| Croplands | Land actively used for crop production, including field crops, orchards, vineyards, pivot and non-pivot irrigation, and intensive farming such as feedlots. | Non-natural |
-| Built-up | Includes all settlements (formal, informal, villages), commercial, and industrial areas, with roads, buildings, and other infrastructure replacing natural cover. | Non-natural |
-| Plantation | Areas planted with non-native tree species for timber production, including mature plantations and recently harvested stands. | Non-natural |
-
-: Table 1. Descriptions of the land cover classes used in this report and whether the class is classified as natural or non-natural.
-
-```{r}
-#| label: tbl-ref
-#| classes: plain
-#| tbl-cap: Table 2 . Remaining natural habitat per biome based on land cover datasets between 1990 – 2022 presented as aerial cover in km2 and (percentage cover). The table includes the recent rate of habitat loss between 1990 and 2022. All extents are presented in square kilometres (km2). Note this calculation assumes that all remaining natural areas are in a good condition with 1750 being the reference year before human development.  *Indicates the first land cover map used in this report.
-
-library(readxl)
-library(dplyr)
-library(knitr)
-library(kableExtra)
-
-# Read Excel with headers
-file_path <- "C:/Users/K.Mogajane/Downloads/Book1.xlsx"
-df_raw <- read_excel(file_path, sheet = "Sheet1", col_names = TRUE)
-
-# Rename first column to "Biome"
-names(df_raw)[1] <- "Biome"
-
-# Clean table
-df_clean <- df_raw %>%
-  # remove rows where Biome is NA or "Time between LULC versions"
-  filter(!is.na(Biome), Biome != "Time between LULC versions") %>%
-  # replace NA in all columns with blank
-  mutate(across(everything(), ~ ifelse(is.na(.), "", as.character(.))))
-
-# Render cleaned table
-df_clean %>%
-  kable("html", escape = FALSE, caption = " ") %>%
-  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
-
-```
-
 ## Summary
 
 The overall extent of natural areas remaining in 2022 varies greatly per biome; only 33% of the Indian Ocean Coastal Belt, 58% of Grassland and 67% of Fynbos are in a natural state (Table 1). All the other biomes are in a significantly better overall state with over 80% remaining natural habitat. Recent habitat loss (from 1990 to 2022) varies across biomes with some showing a high rate of recent habitat loss. The Indian Ocean Coastal Belt biome has lost 0.66% of its natural habitat per year between 1990 and 2022, and 0.27% of the Grassland natural habitat has been lost every year between 1990 to 2022. Within the same period, the Fynbos biome has lost 0.19% of its natural habitat per year, trailing behind the Fynbos biome is the Savanna biome losing 0.13% of its natural habitat per year, followed by Azonal Vegetation with a loss of 0.13% per year.
@@ -410,3 +346,69 @@ South Africa’s timber plantations are located either within or next to indigen
 
 ![Figure 21. The proportional extent of pressures within the Azonal Vegetation biome between 1990 and 2022 land cover sets.](imgs/Plots/Azonal.png){fig-align="center"}
 :::
+
+## Approach
+
+This report summarises trends in the extent of land cover change for every biome from 1990 to 2022 Land Use and Land Cover datasets. The aim of this report is to track loss of natural habitat and the drivers behind the loss.
+
+We use the National Land Cover 7 class version prepared by the South African National Biodiversity Institute (SANBI) for 1990, 2014, 2018, 2020 ad 2022, based on the National Land Cover products served by the Department of Forestry, Fisheries and the Environment), reclassified by SANBI from 72 classes to 7 classes.\
+The re-classified National Land Cover 7 classes are described as follows:\
+1 = Natural or near natural ecosystems
+
+2 = Secondary-natural (previously cropland or mine or built-up, now re-vegetated partially)
+
+3 = Artificial-waterbodies (dams and water treatment)
+
+4 = Built-up (villages, urban, industrial, commercial and infrastructure)
+
+5 = Cropland
+
+6 = Mine
+
+7 = Plantation (alien timber and pulp plantations)
+
+Below we summaries description of each land cover class used in this report and whether they are classified as natural or non-natural.
+
+| Land cover class | Description | Natural/ Non-natural classification |
+|------------------------|------------------------|------------------------|
+| Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
+| Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
+| Artificial-waterbodies | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
+| Croplands | Land actively used for crop production, including field crops, orchards, vineyards, pivot and non-pivot irrigation, and intensive farming such as feedlots. | Non-natural |
+| Built-up | Includes all settlements (formal, informal, villages), commercial, and industrial areas, with roads, buildings, and other infrastructure replacing natural cover. | Non-natural |
+| Plantation | Areas planted with non-native tree species for timber production, including mature plantations and recently harvested stands. | Non-natural |
+
+: Table 1. Descriptions of the land cover classes used in this report and whether the class is classified as natural or non-natural.
+
+```{r}
+#| label: tbl-ref
+#| classes: plain
+#| tbl-cap: Table 2 . Remaining natural habitat per biome based on land cover datasets between 1990 – 2022 presented as aerial cover in km2 and (percentage cover). The table includes the recent rate of habitat loss between 1990 and 2022. All extents are presented in square kilometres (km2). Note this calculation assumes that all remaining natural areas are in a good condition with 1750 being the reference year before human development.  *Indicates the first land cover map used in this report.
+
+library(readxl)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+
+# Read Excel with headers
+file_path <- "C:/Users/K.Mogajane/Downloads/Book1.xlsx"
+df_raw <- read_excel(file_path, sheet = "Sheet1", col_names = TRUE)
+
+# Rename first column to "Biome"
+names(df_raw)[1] <- "Biome"
+
+# Clean table
+df_clean <- df_raw %>%
+  # remove rows where Biome is NA or "Time between LULC versions"
+  filter(!is.na(Biome), Biome != "Time between LULC versions") %>%
+  # replace NA in all columns with blank
+  mutate(across(everything(), ~ ifelse(is.na(.), "", as.character(.))))
+
+# Render cleaned table
+df_clean %>%
+  kable("html", escape = FALSE, caption = " ") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+
+```
+
+

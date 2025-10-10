@@ -81,8 +81,9 @@ Among the various pressures on biodiversity, croplands account for the most exte
 
 ![Figure 1. Total extent of land cover classes since the 1990 till the 2022 land cover datasets for South Africa, this excludes the natural land cover class.](imgs/Country%20-%20Summary%20LCC.jpg){fig-align="center"}
 
-## Provincial extracts
+## Provincial summaries
 
+::: {.panel-tabset group="language"}
 ### Eastern Cape
 
 The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman. The province is dominated by vegetation that transitions between biomes. Subtropical thicket transitions into savanna in the east, fynbos in the west, and Nama Karoo and grassy ecosystems in the north. Therefore, the Eastern Cape has the potential to support various types of industries of economic importance. These include manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
@@ -107,7 +108,7 @@ The Free State province consists of four district municipalities: Fezile Dabi, L
 
 Major economic activities in the province are mining and agriculture (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). These economic activities coincide with the land cover data for the province (Figure 5). Habitat loss in the Free State province is most pronounced in the central to northwestern regions. The Vaal-Vet Sandy Grassland (Figure 6), which spans the boundary between the Free State and North-West provinces, and in both the Fezile Dabi and Lejweleputswa Districts. Another ecosystem type with a high rate of habitat loss in the province is the Eastern Free State Clay Grassland which extends across the eastern region of the province and is within the Thabo Mofutsanyane district (Figure 6). These ecosystem types occupy (xyz % of of the province, xx km2 and xx km2 respectively). They both stand out as the most impacted by land use within the province due to their high rates of recent habitat loss. Land cover shows that croplands, plantations and build-up areas (Figure 5) are the biggest drivers of habitat loss within the province. These land cover statistics are in consistent with economic data showing the agriculture, forestry, mining and urban expansion are the main activities with the province (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
-Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified habitat fragmentation ( @brand2009; @slooten2023), and these are dominant pressures within the Grasslands, particularly in the Free State province.\
+Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified habitat fragmentation (@brand2009; @slooten2023), and these are dominant pressures within the Grasslands, particularly in the Free State province.
 his also supported by the increase in the agriculture sector of the province increasing contribution towards the province's GDP between 2010 and 2024 (The Real Economy Bulletin, 2024). In addition, land cover data (Figure 5) indicate that built-up areas are also playing a substantial role in the continued loss of natural habitat. Although mining has a small footprint within the province, the impacts on biodiversity are long lasting.
 
 ### Gauteng
@@ -209,6 +210,7 @@ Habitat loss rates are generally higher in the lowlands of the Fynbos biome and 
 In the Western Cape, the primary pressures on natural vegetation are concentrated particularly in lowland fynbos and renosterveld areas. Renosterveld, which occurs on fertile soils, has been extensively transformed for agriculture. Studies by @ntshanga2021 and @kemper1999 highlight that this transformation has led to severe habitat fragmentation. While larger renosterveld fragments retain more consistent plant communities, smaller fragments exhibit altered composition, reflecting ecological degradation. These altered patches, though still vegetated, are best described as secondary natural vegetation, areas that maintain some natural structure and function but differ from primary vegetation in composition and ecological integrity.
 
 In lowland fynbos on nutrient-poor soils and Strandveld, urban expansion, especially around Cape Town and coastal developments has been the main driver of habitat loss and fragmentation. Ntshanga et al. (2021) @ntshanga2021 found that urbanisation has left behind small, isolated remnants of natural vegetation, embedded within highly transformed human-dominated landscapes.
+:::
 
 ## Approach
 
