@@ -124,6 +124,58 @@ It is important to note that while land cover changes in recent decades have not
 
 ![Figure 1. Proportional extent of pressures within the land cover in the Albany Thicket between 1990 and 2022.](imgs/Plots/Albany%20thicket.png){fig-align="center" width="664"}
 
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Albany_Thicket.xlsx"
+
+# Read data
+AT <- read_excel(file_path)
+
+# Filter data
+AT_filtered <- AT %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+AT_filtered <- AT_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(AT_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+
 ### Desert
 
 The Desert biome occupies a small portion of the extreme northwest of the country, forming the southernmost extent of the Namib Desert. The Richtersveld region, which includes both Succulent Karoo and Desert ecosystem types (ref), and forms part of the Succulent Karoo Global Biodiversity Hotspot ([Mucina and Rutherford, 2006]{.underline})
@@ -276,7 +328,7 @@ From 1990 to 2014, built-up areas and plantations declined noticeably, while cro
 
 Coastal areas of the KwaZulu-Natal province are densely populated, and as a result, there are numerous economic activities that that result in the alteration of natural habitat Goble and Elst, 2015; @kznedtea2024 ). There have been increasing developments of residential areas and port facilities along the coast ( @g Goble and Elst, 2015), these developments contribute to habitat loss and the land cover has captured this, hence the increase in the extent of built-up areas (Figure 11).
 
-South Africa’s timber plantations are located either within or next to indigenous forest (Karumbidza, 2005) and sometimes within the Indian Ocean Coastal Belt. For example, in KwaZulu-Natal, in the Richard’s Bay area, there are industrial timber plantation that are where Indian Ocean Coastal Belt has been mapped in Mucina and Rutherford (2006) and Dayaram et al., in prep. @karumbidza2006 report that these plantation have led to habitat loss due to conversion of natural land to monoculture plantations. It is important to note that @karumbidza2006 highlighted that areas with industrial timber plantations seem to be infested with alien invasive trees such as Acacia mearnsii (Black wattle), among others. This invasion is because in commercial plantations, some alien trees species are used but they end up invading event areas where they were not meant to occupy (   de Wit et., al. 2001). The national invasive trees survey shows that the Indian Ocean Coastal Belt is the most alien invaded biome in the country (@kotze2025).
+South Africa’s timber plantations are located either within or next to indigenous forest (Karumbidza, 2005) and sometimes within the Indian Ocean Coastal Belt. For example, in KwaZulu-Natal, in the Richard’s Bay area, there are industrial timber plantation that are where Indian Ocean Coastal Belt has been mapped in Mucina and Rutherford (2006) and Dayaram et al., in prep. @karumbidza2006 report that these plantation have led to habitat loss due to conversion of natural land to monoculture plantations. It is important to note that @karumbidza2006 highlighted that areas with industrial timber plantations seem to be infested with alien invasive trees such as Acacia mearnsii (Black wattle), among others. This invasion is because in commercial plantations, some alien trees species are used but they end up invading event areas where they were not meant to occupy ( de Wit et., al. 2001). The national invasive trees survey shows that the Indian Ocean Coastal Belt is the most alien invaded biome in the country (@kotze2025).
 
 ![Figure 11. The proportional extent of pressures within the Indian Ocean Coastal Belt biome between 1990 and 2022 land cover sets.](imgs/Plots/IOCB.png)
 
@@ -410,5 +462,3 @@ df_clean %>%
   kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
 
 ```
-
-
