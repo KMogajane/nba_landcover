@@ -56,7 +56,7 @@ affiliations:
     name: Centre for Statistics in Ecology, Environment and Conservation, Department of Biological Sciences, University of Cape Town, Cape Town, South Africa 
 
 date: September 2025
-bibliography: references.bib
+bibliography: ter_lcc.bib
 csl: annals-of-the-new-york-academy-of-sciences.csl
 citation:
   type: webpage

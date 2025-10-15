@@ -61,7 +61,7 @@ affiliations:
 
 date: last-modified
 
-bibliography: ter_lcc_prov.bib
+bibliography: ter_lcc.bib
 
 citation:
   type: webpage
