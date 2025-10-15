@@ -90,7 +90,72 @@ The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo
 
 Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands (42.9 % of the province plantations (6.8%), built-up areas (22.2%) and mining (\<1%) (Figure 3). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major foootprint within the province (\<1%).
 
-![Figure 3. The percentage cover of land cover pressures driving habitat loss in the Eastern Cape province, based on the 2022 land cover data. The values alongside the bars indicate the percentage cover of each land-cover class. Croplands account for the largest share of habitat loss (42.9%), followed by secondary-natural vegetation (28%), built-up areas (22.2%), plantations (6.8%), and mining, which contributes the smallest share at less than 1%.](imgs/ec_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+EC <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+EC_long <- EC %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(EC_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Eastern Cape"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+
+```
 
 ![Figure 4. Rate of recent habitat loss indicator (1990–2022) fo r the Eastern Cape, calculated per terrestrial ec osystem type. Notable habitat loss is observed in the northeastern regions of the province and along the western coastline.](imgs/ec_prov_habitatloss.png){fig-align="center"}
 
@@ -102,7 +167,72 @@ The northern parts of the Eastern Cape province have Grasslands as mentioned ear
 
 The Free State province consists of four district municipalities: Fezile Dabi, Lejweleputswa, Mangaung, Thabo Mofutsanyane and Xhariep. Grasslands dominate across the province, with some occurrences of Azonal Vegetation whose distribution is driven by water and moisture availability, mainly along rivers, streams, drainage lines and areaswith high soil moisture content. Fragments of the Savanna and Nama-Karoo biomes are found in the western and southwestern parts of the province, respectively. The Free State province supports various industries of economic importance. These include mining, agriculture and manufacturing (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
-![Figure 5. The proportional percentage of habitat loss drivers within the Free State province from the 2022 land cover data. Croplands contribute the highest percentage to habitat loss (78.7%), followed by secondary-natural (16.2%), built-up areas (2.9%), plantations (2%) and mining with the lowest percentage (0.3%).](imgs/fs_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+FS <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+FS_long <- FS %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(FS_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Free State"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+
+```
 
 ![Figure 6. Rate of recent habitat loss indicator for the Free State, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the northern portions of the province.](imgs/fs_prov_habitatloss.png){fig-align="center"}
 
@@ -114,7 +244,71 @@ Grasslands are also extensively used for grazing by livestock and game but incre
 
 The Gauteng province is characterised by a mosaic and transition zones between the Grassland and Savanna biomes. Savannas mainly found in the northern part of the province, with smaller fragments in the southwestern and southeastern areas. In contrast, the Grassland dominates the central and much of the remaining parts of the province. As a result, Gauteng supports a variety of economically important industries. Including manufacturing, construction, mining and agriculture (The Real Economy Bulletin, 2024). Gauteng has four district municipalities; City of Johannesburg, City of Tshwane, Ekurhuleni, Sedibeng and West Rand. Infrastructure and croplands are the biggest drivers of habitat loss within the Gauteng province (both more than 20% of the province’s extent).
 
-![Figure 7. The percentage of habitat loss drivers within the Gauteng province from the 2022 land cover data. Built-up contribute the highest percentage to habitat loss (37.8%), followed by cropland (34.6%), secondary-natural (21.7%), plantations (4.3%) and mining with the lowest percentage (1.6%).](imgs/g_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+GP <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+GP_long <- GP %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(GP_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Gauteng"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 8. Rate of recent habitat loss indicator for Gauteng, 1990–2022, calculated per terrestrial ecosystem type. Note the remarkably high rates of habitat loss in metropolitan areas, the rate of loss calculated between 1990 and 2022.](imgs/g_prov_habitatloss.png){fig-align="center"}
 
@@ -130,7 +324,71 @@ The KwaZulu-Natal province contains a diverse mix of Savanna, Grassland, Forests
 
 The KwaZulu-Natal province faces a suite of pressures which are the biggest drivers of habitat loss within the province. The primary pressures leading to this loss in KZN are croplands (nearly 12.5% of province), infrastructure (nearly 10% of the province) and plantations (nearly 8%) of the province. Although present, mining does not particularly have the greatest impacts within the province (\<1%).
 
-![Figure 9. The key forms of habitat loss in KwaZulu-Natal are infrastructure and various field crops. The proportional percentage of habitat loss drivers within the KwaZulu-Natal province from the 2022 land cover data. Croplands contribute the highest percentage to habitat loss (over 29.7%), followed by secondary-natural (29.1%), built-up (22.4%), plantations (18.6%) and mining with the lowest percentage ( 0.2%).](imgs/kzn_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+KZN <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+KZN_long <- KZN %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(KZN_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "KwaZulu-Natal"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 10. Rate of recent habitat loss indicator for KwaZulu-Natal, 1990–2022, calculated per terrestrial ecosystem type. Note the remarkably high rates of habitat loss in metropolitan areas, the rate of loss calculated between 1990 and 2022.](imgs/kzn_prov_habitatloss.png){fig-align="center"}
 
@@ -144,7 +402,71 @@ Limpopo province is predominantly covered by the Savanna biome, with smaller are
 
 The Limpopo province faces a suite of pressures which are the biggest drivers of habitat loss within the province. The primary pressures leading to this loss in Limpopo are croplands (over 10% of province), infrastructure (nearly 4% of the province). Plantations and mining do not particularly have the greatest impacts within the province (\<2%).
 
-![Figure 11. The percentage of habitat loss drivers within the Limpopo province from the 2022 land cover data. Croplands contribute the highest percentage to habitat loss (43.2%), followed by secondary-natural (34.9%), built-up (17.7%), plantations (3.3%) and mining with the lowest percentage (less than 0.9%).](imgs/l_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+LP <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+LP_long <- LP %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(LP_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Limpopo"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 12. Rate of recent habitat loss indicator for Limpopo, 1990–2014, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the southern and central portions of the province.](imgs/l_prov_habitatloss.png){fig-align="center"}
 
@@ -158,11 +480,75 @@ Mpumalanga province is characterised by a mix of Grassland, Savanna, and Forest 
 
 Habitat loss in Mpumalanga as a result of land clearing for croplands (40.3% of the province)) which is the primary pressure in the provice. Infrastructure in the form of built-up areas (1.25%) and plantations (1% of the province) and mining (\<1%). Although having the lowest cover responsbilble within the province, Mpumalanga has a significant mining economy, with documented impacts on biodiversity, particularly on wetlands ( @curtis2024; @hayes2016 ).
 
-![Figure 13. The key forms of habitat loss in Mpumalanga are various field crops and plantation forestry. From the 2022 land cover data, croplands occupy 40.3% of the Mpumalanga province, followed by secondary-natural (26.8), plantations (23.4%), built-up areas (7.8%) and mining (1.7%).](imgs/mp_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+MP <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+MP_long <- MP %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(MP_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Mpumalanga"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 14. Rate of recent habitat loss indicator for Mpumalanga, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the southern and central portions of the province.](imgs/mp_prov_habitatloss.png){fig-align="center"}
 
-Rates of habitat loss are generally higher in the southern and central parts of the province (Figure 14).  Endangered ecosystem types such as the Legogote Sour Bushveld ( @skowno2021b) have broad range of pressures, but plantations have been the key pressure. Built up areas cover have also been impacting the biodiversity in the province negatively due to expansion of infrastructure and settlements. Although mining covers less than 1% of the provincial extent, it has long-term direct and indirect impacts on species and ecosystems. @laisani2019 study on the Klipspruit mine in Witbank highlighted direct impacts such as contamination on rivers, causing a decline in aquatic biodiversity in the Olifants and Wilge rivers. In addition to polluting aquatic ecosystems, mining has resulted in extensive land degradation, loss of fertile soils, and declining agricultural productivity particularly in maize-producing areas. Air quality conditions are poor in the province due to exceedingly high levels of air pollution ( @groundwork2023).
+Rates of habitat loss are generally higher in the southern and central parts of the province (Figure 14). Endangered ecosystem types such as the Legogote Sour Bushveld ( @skowno2021b) have broad range of pressures, but plantations have been the key pressure. Built up areas cover have also been impacting the biodiversity in the province negatively due to expansion of infrastructure and settlements. Although mining covers less than 1% of the provincial extent, it has long-term direct and indirect impacts on species and ecosystems. @laisani2019 study on the Klipspruit mine in Witbank highlighted direct impacts such as contamination on rivers, causing a decline in aquatic biodiversity in the Olifants and Wilge rivers. In addition to polluting aquatic ecosystems, mining has resulted in extensive land degradation, loss of fertile soils, and declining agricultural productivity particularly in maize-producing areas. Air quality conditions are poor in the province due to exceedingly high levels of air pollution ( @groundwork2023).
 
 ### Northern Cape
 
@@ -171,7 +557,71 @@ As a result, various economically important activities are supported by the prov
 
 Habitat loss rates in the Northern Cape are significantly lower than the national average, with less than 4% of the province affected by anthropogenic activities. However, extensive mining along the coast and cropland expansion in the Fynbos/ Succulent Karoo transition areas of the far south have had notable local impacts.
 
-![Figure 15. The key forms of habitat loss in the Northern Cape are various field crops and horticultural crops, human settlements and mining. Although minimal compared to the rest of the country (all below 1%). The secondary-natural occupies 40% of the province, followed by croplands (34.6%), built-up areas (14.1%), mining (10.9%) and plantations (0.3%).](imgs/nc_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+NC <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+NC_long <- NC %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(NC_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Northern Cape"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 16. Rate of recent habitat loss indicator 1990–2022 calculated per terrestrial ecosystem type. Note the overall low levels of habitat loss in the arid Northern Cape.](imgs/nc_prov_habitatloss.png){fig-align="center"}
 
@@ -188,7 +638,71 @@ The North West province contains a mix and transition of Savanna and Grassland b
 
 The primary pressure in the terrestrial realm in the North West province is habitat loss because of land clearing for croplands (nearly 30% of the province), infrastructure captured as built-up areas (2.5%) and mining (\<2%).
 
-![Figure 17. The key forms of habitat loss in North West are various field crops including grains. Accroding to the 2022 land cover data, croplands occupy 63.7% of the North West province, followed by secondary-natural (26.5%), built-up areas (7.7%), plantation (1.3%) and mining (0.8%).](imgs/nw_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+NW <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+NW_long <- NW %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(NW_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "North West"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 18. Rate of recent habitat loss indicator for North West, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the eastern and central portions of the province.](imgs/nw_prov_habitatloss.png){fig-align="center"}
 
@@ -200,7 +714,71 @@ The Western Cape province contains a mix of Fynbos, Succulent Karoo, Forests, an
 
 The pressure resulting in habitat loss with the province are croplands and other forms of intensive agriculture (nearly 15% of the province), plantation forestry (2%), infrastructure and settlements (3%) and mining (\<1%).
 
-![Figure 19. The key forms of habitat loss in the Western Cape are various field crops and horticultural crops, human settlements and plantation forestry. According to the 2022 land cover data, croplands occupy 67.9% of the Western Cape province, followed by secondary-natural (22.5%), built-up areas (6.2%), plantations (3.1%) and mining (0.3%).](imgs/wc_prov_lcc_extent.png){fig-align="center"}
+```{r}
+
+library(tidyverse)
+
+# Read data while preserve column names
+WC <- read.csv(
+  "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/prov_sum.csv",
+  check.names = FALSE
+)
+
+# Prepare long-format data (exclude Secondary-natural)
+WC_long <- WC %>%
+  select(PROVINCE, Plantation, Mine, Cropland, `Built-up`) %>%
+  pivot_longer(
+    cols = c(Plantation, Mine, Cropland, `Built-up`),
+    names_to = "Pressure",
+    values_to = "km2"
+  ) %>%
+  group_by(PROVINCE) %>%
+  tidyr::complete(
+    Pressure = c("Plantation", "Mine", "Cropland", "Built-up"),
+    fill = list(km2 = 0)
+  ) %>%
+  mutate(prop = km2 / sum(km2, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define factor order and colors
+pressure_levels <- c("Plantation", "Mine", "Cropland", "Built-up")
+pressure_colors <- c(
+  "Plantation" = "purple",
+  "Mine" = "red",
+  "Cropland" = "brown",
+  "Built-up" = "black"
+)
+
+# Function to plot a single province
+plot_province <- function(province_name) {
+  ggplot(filter(WC_long, PROVINCE == province_name),
+         aes(x = prop, y = fct_rev(factor(Pressure, levels = pressure_levels)),
+             fill = Pressure)) +
+    geom_col(width = 0.6, show.legend = FALSE) +
+    scale_fill_manual(values = pressure_colors) +
+    scale_x_continuous(labels = scales::number_format(accuracy = 0.1)) +
+    labs(
+      x = "Habitat loss (km², %)",
+      y = NULL
+    ) +
+    coord_flip() +
+    theme_minimal(base_size = 13) +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14),
+      axis.text.y = element_text(size = 12),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.grid = element_blank()
+    )
+}
+
+# --- Specify the province ---
+province_to_plot <- "Western Cape"
+
+# Generate and display the plot
+province_plot <- plot_province(province_to_plot)
+province_plot
+```
 
 ![Figure 20. Rate of recent habitat loss indicator for the Western Cape, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the Overberg and Swartland regions of the Cape lowlands.](imgs/wc_prov_lcc_habitatloss.png){fig-align="center"}
 
