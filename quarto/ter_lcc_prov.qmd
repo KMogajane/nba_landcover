@@ -88,7 +88,7 @@ Among the various pressures on biodiversity, croplands account for the most exte
 
 The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman. The province is dominated by vegetation that transitions between biomes. Subtropical thicket transitions into savanna in the east, fynbos in the west, and Nama Karoo and grassy ecosystems in the north. Therefore, the Eastern Cape has the potential to support various types of industries of economic importance. These include manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
-Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands (42.9 % of the province plantations (6.8%), built-up areas (22.2%) and mining (\<1%) (Figure 3). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major foootprint within the province (\<1%).
+Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands (42.9 % of the province plantations (6.8%), built-up areas (22.2%) and mining (<1%) (Figure 3). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major foootprint within the province (<1%).
 
 ```{r}
 
@@ -148,7 +148,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Eastern Cape"
 
 # Generate and display the plot
@@ -157,11 +157,17 @@ province_plot
 
 ```
 
-![Figure 4. Rate of recent habitat loss indicator (1990–2022) fo r the Eastern Cape, calculated per terrestrial ec osystem type. Notable habitat loss is observed in the northeastern regions of the province and along the western coastline.](imgs/ec_prov_habitatloss.png){fig-align="center"}
+Figure 2.Key drivers of habitat loss within the Eastern Cape province based on the 2022 land cover data. 
+
+:::
+
+::: {.panel-tabset group="language"}
+
+![Figure 3. Rate of recent habitat loss indicator (1990–2022) fo r the Eastern Cape, calculated per terrestrial ec osystem type. Notable habitat loss is observed in the northeastern regions of the province and along the western coastline.](imgs/ec_prov_habitatloss.png){fig-align="center"}
 
 Major economic activities in the Eastern Cape province are manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). Recent habitat loss (1990–2022) within the province is most apparent in its northeastern parts and is particularly high within the Nelson Mandela Bay Metro, where rapid urban expansion has driven significant habitat loss. Several ecosystem types within the province (Buffels Valley Thicket, Motherwell Karroid Thicket, and Umtiza Forest Thicket) are listed as Critically Endangered in the 2022 National Red List of Ecosystems ( @skowno2021b) due to their restricted distribution and ongoing habitat loss. As shown in Figure 4 above, habitat loss driven by both natural and anthropogenic pressures not only reduces the extent of these ecosystems but can also escalate their threat status.
 
-The northern parts of the Eastern Cape province have Grasslands as mentioned earlier. Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified habitat fragmentation ( @slooten2023). Rutherford et al. (2012) ( showed that the loss of natural habitat within sites in the Sarah Baartman District Municipality (Figure 4) is likely due to heavy long-term herbivory resulted in a loss of natural vegetation which got replaced largely by alien, unpalatable species. Other land use and land cover studies also show that urban expansion and agricultural expansion particularly in the grassier areas within the province ( @zahn2017; @slooten2023). The most habitat loss within the province is a result of a high concentration of economic activities such citrus and goat farming which is popular in the portion of the province that has thicket vegetation and generally low in elevation ( @lechmere-oertel004; Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
+The northern parts of the Eastern Cape province have Grasslands as mentioned earlier. Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified habitat fragmentation (@slooten2023). Rutherford et al. (2012) showed that the loss of natural habitat within sites in the Sarah Baartman District Municipality (Figure 4) is likely due to heavy long-term herbivory resulted in a loss of natural vegetation which got replaced largely by alien, unpalatable species. Other land use and land cover studies also show that urban expansion and agricultural expansion particularly in the grassier areas within the province (@zahn2017; @slooten2023). The most habitat loss within the province is a result of a high concentration of economic activities such citrus and goat farming which is popular in the portion of the province that has thicket vegetation and generally low in elevation (@lechmere-oertel004; Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
 ### Free State
 
@@ -225,7 +231,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Free State"
 
 # Generate and display the plot
@@ -233,6 +239,7 @@ province_plot <- plot_province(province_to_plot)
 province_plot
 
 ```
+
 
 ![Figure 6. Rate of recent habitat loss indicator for the Free State, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the northern portions of the province.](imgs/fs_prov_habitatloss.png){fig-align="center"}
 
@@ -302,7 +309,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Gauteng"
 
 # Generate and display the plot
@@ -382,7 +389,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "KwaZulu-Natal"
 
 # Generate and display the plot
@@ -460,7 +467,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Limpopo"
 
 # Generate and display the plot
@@ -538,7 +545,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Mpumalanga"
 
 # Generate and display the plot
@@ -615,7 +622,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Northern Cape"
 
 # Generate and display the plot
@@ -696,7 +703,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "North West"
 
 # Generate and display the plot
@@ -772,7 +779,7 @@ plot_province <- function(province_name) {
     )
 }
 
-# --- Specify the province ---
+# Specify the province
 province_to_plot <- "Western Cape"
 
 # Generate and display the plot
