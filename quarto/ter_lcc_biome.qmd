@@ -55,44 +55,18 @@ affiliations:
     number: 4
     name: Centre for Statistics in Ecology, Environment and Conservation, Department of Biological Sciences, University of Cape Town, Cape Town, South Africa 
 
-date: September 2025
+date: last-modified
+
 bibliography: ter_lcc.bib
-csl: annals-of-the-new-york-academy-of-sciences.csl
+
 citation:
   type: webpage
   container-title: National Biodiversity Assessment 2025
   publisher: South African National Biodiversity Institute
   url: http://nba.sanbi.org.za/
-appendix-cite-as: display
+
+appendix-cite-as: false
 google-scholar: true
-format: 
-  html:
-    crossref:
-      fig-prefix: Figure
-      tbl-prefix: Table
-      ref-hyperlink: true
-      fig-labels: arabic
-      tbl-labels: arabic
-      subref-labels: alpha a
-      title-delim: "."
-    toc: true
-    toc-location: right
-    toc-depth: 4
-    toc-expand: true
-    theme: 
-      - default 
-      - custom.scss
-language:
-  section-title-footnotes: Notes
-  section-title-citation: Recommended citation
-footnotes-hover: true
-reference-location: document
-link-external-newwindow: true
-callout-icon: false
-execute:
-  echo: false 
-  warning: false 
-  message: false
 ---
 
 ------------------------------------------------------------------------
@@ -174,6 +148,61 @@ ggplot(AT_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_
 ```
 Figure 1. Trends in the proportional extent of pressures within the land cover in the Albany Thicket between 1990 and 2022.
 
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+AT2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Albany_Thicket.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+# -------------------------------
+AT2_2022 <- AT2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(AT2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+
+```
+Figure 2. The extent of natural and non-natural cover the biome's total area, approximately 3 500 km2 has been transformed to a non-natural condition, of which is mainly dominated by cropland (50.2%), secondary-natural (27.5%), built-up areas (17.4%), artificial waterbody (2.9%, plantation (1.6%) and mine (0.4%), respectively. 
+
 ### Desert
 
 The Desert biome occupies a small portion of the extreme northwest of the country, forming the southernmost extent of the Namib Desert. The Richtersveld region, which includes both Succulent Karoo and Desert ecosystem types (ref), and forms part of the Succulent Karoo Global Biodiversity Hotspot (@jurgens2006)
@@ -185,6 +214,114 @@ From 1990 to 2014, mining and cropland areas declined, while secondary-natural v
 The patterns in the Cropland extent decline (Figure 3), could largely be due to water scarcity (as there is a decline in artificial waterbody extent (Figure 3), soil degradation, and limited agricultural viability in Desert ecosystems, this contraction was accompanied by a gradual expansion of secondary-natural vegetation (Figure 3), likely driven by the abandonment of farmlands and mine-closures, allowing for passive ecological recovery (Mutanga et al., 2024; Urban et al., 2024). The decline of mining extent may have been driven by global fluctuations in mineral prices and regulatory tightening ultimately leading to the closure or downscaling of several mines, particularly those with shallow or exhausted deposits (@lotchner2013; @theobald2025). South Africa also downscaled mines, often leading to abandonment of the mining sites (@nel2002; @lotchner2013;@marais2013). Through land cover data, we observe a trend where a decline in mine extent, is correlated to an increase in the increase of secondary-natural extent (Figure 3) in the same time periods with the mine closures, suggesting the abandoned mining sites may be passively re-vegetating. Built-up areas expansion around former mining towns and renewable energy zones reflects the growth of peri-urban settlements, infrastructure developments, and new energy installations such as solar farms in remote desert areas (@gaeatlholwe2023). Studies from the United States, United Kingdom and India suggest that land requirements for renewable energy are far more than the land required for fossil fuel reliant energy (@gaeatlholwe2023), this means that more biodiversity is at large risk of loss die to more land requirements.
 
 Importantly, plantation forestry was effectively absent throughout the period, consistent with the ecological limitations of Desert biome including low soil nutrients, wind erosion, limited rooting depth, and high evapotranspiration (@jurgens2006: Mutanga et al., 2024). Overall, the desert biome appears to be undergoing an ecological transition, marked by a retreat of intensive land uses and the emergence of a mosaic landscape of low-density settlement, natural vegetation recovery, and selective agricultural intensification where hydrological conditions allow. These dynamics are consistent with desertification-response models, which predict natural regrowth in previously disturbed zones under reduced human pressure (Urban et al., 2024; @gaeatlholwe2023 ).
+
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Desert.xlsx"
+
+# Read data
+D <- read_excel(file_path)
+
+# Filter data
+D_filtered <- D %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+D_filtered <- D_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(D_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Figure 3. Trends in the proportional extent of pressures within the land cover in the Desert between 1990 and 2022.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+D2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Desert.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+# -------------------------------
+D2_2022 <- D2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(D2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+
+Figure 4. The extent of natural and non-natural cover the biome's total area, approximately 3 500 km2 has been transformed to a non-natural condition, of which is mainly dominated by cropland (50.2%), secondary-natural (27.5%), built-up areas (17.4%), artificial waterbody (2.9%, plantation (1.6%) and mine (0.4%), respectively. 
 
 ### Forest
 
@@ -200,13 +337,172 @@ South Africa’s timber plantations are located either within or next to indigen
 
 The natural extent of the Forest still occupies majority of the biome at nearly 4 000 km2 (82% of the biome) (Table 2 and Figure 6a). However, secondary-natural vegetation and plantations remain key pressures within the Forest biome (Figure 6b) driven largely timber and pulp industries, overharvesting, invasive species and other disturbances leading to loss of natural habitat (@karumbidza2006; @geldenhuys2010, @geldenhuys2011).
 
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Forest.xlsx"
+
+# Read data
+FRST <- read_excel(file_path)
+
+# Filter data
+FRST_filtered <- FRST %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+FRST_filtered <- FRST_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(FRST_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+Figure 5. Trends in the proportional extent of pressures within the land cover in the Desert between 1990 and 2022.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+FRST2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Forest.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+FRST2_2022 <- FRST2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(FRST2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+
+```
+Figure 6. The extent of natural and non-natural cover the biome's total area, approximately 3 500 km2 has been transformed to a non-natural condition, of which is mainly dominated by cropland (50.2%), secondary-natural (27.5%), built-up areas (17.4%), artificial waterbody (2.9%, plantation (1.6%) and mine (0.4%), respectively. 
+
 ### Fynbos
 
 In this section, we will firstly explore the pressures within the Fynbos at a biome level. Then address these pressures through the Renosterveld and the Fynbos vegetation groups.
 
 The Fynbos biome is globally recognised as a unique floral kingdom and Global Biodiversity Hotspot, with very high plant diversity and levels of endemism. However, only 67% of its natural habitat remains, and facing an average annual habitat loss rate of 0.19%. Multiple drivers contribute to this ongoing decline, as indicated by land cover data. Cropland emerges as the predominant pressure, having occupied the largest area within the biome since 1990. Over time cropland seems to have decreased as secondary natural area has increased, along with a proportionally smaller increase in built-up area.
 
-A recent study by @du_preez2025 assessed Indigofera genus to understand how plant species have adapted and diversified across the biome. Their findings reveal that the Fynbos biome is made up of two distinguishable vegetation groups, each shaped by unique soils, climate and fire regimes. The most important are Fynbos (found mostly on nutrient poor, sandy soil in mountain areas) and Renosterveld (found in nutrient richer, shale-based soils in lowlands). Although they often sit side by side on the landscape, these two ecosystems experience different pressures and support different plant communities. @du_preez2025 used Indigofera species as indicators of how plants have moved across these environments over millions of years. Some Indigofera groups have specialised in Fynbos, especially in montane sandstone habitats where frequent fires, low nutrients and isolation drive rapid plant diversification. Other groups are adapted to the Renosterveld which is less fire-prone but highly fertile and increasingly under threat from farming and development.  This evolutionary evidence from @du_preez2025 coupled with pressures unique to the Fynbos and Renosterveld vegetation groups provides justification to split our assessment of pressures in the Fynbos biome. Recognising that there are Strandveld and Shale Band vegetation groups within the Fynbos biome, studies such as Rebelo et al (2006) and \@cowlin Cowling et al (2023) indicate a close affinity of the Strandveld and the Shale Band vegetation to Fynbos, hence we have included the ecosystem types within those vegetation groups into the Fynbos vegetation our Fynbos/Renosterveld group split.
+A recent study by @du_preez2025 assessed Indigofera genus to understand how plant species have adapted and diversified across the biome. Their findings reveal that the Fynbos biome is made up of two distinguishable vegetation groups, each shaped by unique soils, climate and fire regimes. The most important are Fynbos (found mostly on nutrient poor, sandy soil in mountain areas) and Renosterveld (found in nutrient richer, shale-based soils in lowlands). Although they often sit side by side on the landscape, these two ecosystems experience different pressures and support different plant communities. @du_preez2025 used Indigofera species as indicators of how plants have moved across these environments over millions of years. Some Indigofera groups have specialised in Fynbos, especially in montane sandstone habitats where frequent fires, low nutrients and isolation drive rapid plant diversification. Other groups are adapted to the Renosterveld which is less fire-prone but highly fertile and increasingly under threat from farming and development. This evolutionary evidence from @du_preez2025 coupled with pressures unique to the Fynbos and Renosterveld vegetation groups provides justification to split our assessment of pressures in the Fynbos biome. Recognising that there are Strandveld and Shale Band vegetation groups within the Fynbos biome, studies such as Rebelo et al (2006) and @cowlin Cowling et al (2023) indicate a close affinity of the Strandveld and the Shale Band vegetation to Fynbos, hence we have included the ecosystem types within those vegetation groups into the Fynbos vegetation our Fynbos/Renosterveld group split.
+
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Fynbos.xlsx"
+
+# Read data
+FYNBS <- read_excel(file_path)
+
+# Filter data
+FYNBS_filtered <- FYNBS %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+FYNBS_filtered <- FYNBS_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(FYNBS_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+Figure x. 
 
 **Fynbos vegetation**
 
@@ -220,33 +516,32 @@ Ntshanga (2021) @ntshanga2021 highlight the severe habitat transformation and fr
 
 In Figure 10, the built-up, Studies showed that Fynbos vegetation faces threats of habitat loss and fragmentation from urban development, agriculture, plantation forestry and the spread of invasive alien plants (@sandberg2016).
 
-![Figure 7. The proportional extent of pressures within the Fynbos biome between 1990 and 2022 land cover sets.](imgs/Plots/Fynbos%20vegetation%20group.png)
-
-```         
-# Install packages if not installed
-if (!require("treemap")) install.packages("treemap")
-if (!require("readxl")) install.packages("readxl")
-if (!require("dplyr")) install.packages("dplyr")
-
+```{r}
 # Load libraries
 library(readxl)
 library(dplyr)
-library(treemap)
+library(ggplot2)
 
-# Read your Excel file
-df <- read_excel("RenosterveldExampleFinal.xlsx", sheet = "Sheet1")
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/FSSBand_VG.xlsx"
 
-# Prepare data for YEAR 2022
-df_2022 <- df %>%
-  filter(YEAR == 2022) %>%
-  mutate(group = ifelse(LC7_text == "Natural", "Natural", "Non-Natural"),
-         subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)) %>%
-  group_by(group, subgroup) %>%
-  summarise(value = sum(km2, na.rm = TRUE), .groups = "drop")
+# Read data
+FSSBand_VG <- read_excel(file_path)
 
-# Define colour scheme (aligned with your LC7_text values)
+# Filter data
+FSSBand_VG_filtered <- FSSBand_VG %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+FSSBand_VG_filtered <- FSSBand_VG_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
 custom_colors <- c(
-  "Natural" = "green",
   "Built-up" = "black",
   "Mine" = "red",
   "Artificial-waterbody" = "blue",
@@ -255,14 +550,78 @@ custom_colors <- c(
   "Cropland" = "brown"
 )
 
-# Treemap plot
-treemap(df_2022,
-        index = c("group", "subgroup"),
-        vSize = "value",
-        type = "index",
-        palette = custom_colors[df_2022$subgroup]
-)
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(FSSBand_VG_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+ 
 ```
+Figure y. 
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+FSSBand_VG2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/FSSBand_VG.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+FSSBand_VG2_2022 <- FSSBand_VG2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(FSSBand_VG2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+
 
 **Renosterveld vegetation**
 
@@ -274,31 +633,32 @@ Between 1990 and 2014, cropland, plantation, and artificial waterbodies declined
 
 Drought within the Western Cape between 2015 and 2018 (@pienaar2018; @mahlalela2020; @orimoloye2022 ) resulted in a decline in crop production, with a 14% decline across the agricultural industry within the Western Cape province particularly in the Renosterveld. This was due to reduced access to water resources (@pienaar2018). These effects are couple with the decline in articfial waterbody and cropland decline in the 2014 and 2018 in the land cover data (Figure 9).
 
-![Figure 9. The proportional extent of pressures within the Renosterveld vegetation between 1990 and 2022 land cover sets.](imgs/Plots/RenosterveldF.png)
-
-```         
-# Install packages if not installed
-if (!require("treemap")) install.packages("treemap")
-
+```{r}
 # Load libraries
 library(readxl)
 library(dplyr)
-library(treemap)
+library(ggplot2)
 
-# Read your Excel file
-ren_sum <- read_excel("C:/Users/K.Mogajane/Downloads/RenosterveldExampleFinal.xlsx", sheet = "Sheet1")
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Renosterveld_VG.xlsx"
 
-# Prepare data for YEAR 2022
-ren_sum <- ren %>%
-  filter(YEAR == 2022) %>%
-  mutate(group = ifelse(LC7_text == "Natural", "Natural", "Non-Natural"),
-         subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)) %>%
-  group_by(group, subgroup) %>%
-  summarise(value = sum(km2, na.rm = TRUE), .groups = "drop")
+# Read data
+Renosterveld_VG <- read_excel(file_path)
 
-# Define colour scheme (aligned with your LC7_text values)
+# Filter data
+Renosterveld_VG_filtered <- Renosterveld_VG %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+Renosterveld_VG_filtered <- Renosterveld_VG_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
 custom_colors <- c(
-  "Natural" = "green",
   "Built-up" = "black",
   "Mine" = "red",
   "Artificial-waterbody" = "blue",
@@ -307,14 +667,78 @@ custom_colors <- c(
   "Cropland" = "brown"
 )
 
-# Treemap plot
-treemap(ren_sum,
-        index = c("group", "subgroup"),
-        vSize = "value",
-        type = "index",
-        palette = custom_colors[ren_sum$subgroup]
-)
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(Renosterveld_VG_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
 ```
+
+Figure 9. The proportional extent of pressures within the Renosterveld vegetation between 1990 and 2022 land cover sets.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+Renosterveld_VG2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Renosterveld_VG.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+Renosterveld_VG2_2022 <- Renosterveld_VG2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(Renosterveld_VG2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+
 
 ### Indian Ocean Coastal Belt
 
@@ -328,7 +752,111 @@ Coastal areas of the KwaZulu-Natal province are densely populated, and as a resu
 
 South Africa’s timber plantations are located either within or next to indigenous forest (@karumbidza2006) and sometimes within the Indian Ocean Coastal Belt. For example, in KwaZulu-Natal, in the Richard’s Bay area, there are industrial timber plantation that are where Indian Ocean Coastal Belt has been mapped in Mucina and Rutherford (2006) and Dayaram et al., in prep. @karumbidza2006 report that these plantation have led to habitat loss due to conversion of natural land to monoculture plantations. It is important to note that @karumbidza2006 highlighted that areas with industrial timber plantations seem to be infested with alien invasive trees such as Acacia mearnsii (Black wattle), among others. This invasion is because in commercial plantations, some alien trees species are used but they end up invading event areas where they were not meant to occupy ( de Wit et., al. 2001). The national invasive trees survey shows that the Indian Ocean Coastal Belt is the most alien invaded biome in the country (@kotze2025).
 
-![Figure 11. The proportional extent of pressures within the Indian Ocean Coastal Belt biome between 1990 and 2022 land cover sets.](imgs/Plots/IOCB.png)
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/IOCB.xlsx"
+
+# Read data
+IOCB <- read_excel(file_path)
+
+# Filter data
+IOCB_filtered <- IOCB %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+IOCB_filtered <- IOCB_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(IOCB_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+Figure 11. The proportional extent of pressures within the Indian Ocean Coastal Belt biome between 1990 and 2022 land cover sets.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+IOCB2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/IOCB.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+IOCB2_2022 <- IOCB2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(IOCB2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+Figure abc. 
 
 ### Grassland
 
@@ -344,6 +872,113 @@ Urban expansion also plays a significant role in habitat loss, particularly in r
 
 Although low in proportional extent, it is worth noting that the highveld region (mainly Mpumalanga province) of the Grassland has numerous of mines which include 12-coal powered fire stations and at least 70 coal mines ( @kamolane-kgadima2024). In addition to driving habitat loss, these mines are reported to being the highest contributors to air pollution in within the region (@kamolane-kgadima2024 ). Other highveld regions include the Gauteng, Free State and North West provinces where mining also occurs and has contributed to habitat loss, water and air pollution due to acid mine drainage, particularly in Gauteng ( @minnaar2020).
 
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Grassland.xlsx"
+
+# Read data
+GL <- read_excel(file_path)
+
+# Filter data
+GL_filtered <- GL %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+GL_filtered <- GL_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(GL_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Figure bbn
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+GL2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Grassland.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+GL2_2022 <- GL2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(GL2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+Figure xyz 
+
 ### Nama-Karoo
 
 The Nama-Karoo lies to the west of the Grassland biome and makes up much of the arid interior of the country. It receives summer rainfall and is dominated by drought tolerant shrubs and C3 grasses. The Nama-Karoo remains largely intact at the biome scale, with 98% of its natural habitat still present, reflecting the lowest annual rate of habitat loss across all biomes with, just 0.019% per year (Table 1). However, regardless of the small rate of loss, there are pressures impacting the biome. Land cover data suggests that since 1990, croplands have been the most impactful in this biome and continue to be, although they have reduced in extent (Figure 15). An emerging pressure that is increasing in impact is infrastructure due to the rise of built-up areas recorded by the land cover. They have especially increase since the 2014 land cover data set.
@@ -354,7 +989,112 @@ While cropland has declined in overall extent, it continues to exert the most pr
 
 These emerging pressures overlap with short-term fluctuations in land cover categories, such as intermittent increases in artificial waterbodies and croplands. Such patterns likely reflect temporary responses to rainfall variation, economic cycles, or energy development phases ( @walker2018). For instance, croplands may recover during wetter periods. @walker2018 emphasize that governance decisions, development priorities, and climate shifts increasingly shape land use in the Nama-Karoo, often in ways that outpace ecological recovery or institutional planning. The transformation of plains, drainage lines, and bioregional linkages particularly in the Upper Karoo, Lower Karoo, and Bushmanland; represents more than isolated land cover change; these are the corridors that support ecological flow across a biome already limited in formal protection (ref). The integration of large-scale projects into these areas introduces new socio-ecological dynamics that are not only spatially extensive but also structurally transformative (@walker2018).
 
-![Figure 15. The proportional extent of pressures within the Nama-Karoo biome between 1990 and 2022 land cover sets.](imgs/Plots/Nama-Karoo.png)
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Nama-Karoo.xlsx"
+
+# Read data
+NK <- read_excel(file_path)
+
+# Filter data
+NK_filtered <- NK %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+NK_filtered <- NK_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(NK_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Figure 15. The proportional extent of pressures within the Nama-Karoo biome between 1990 and 2022 land cover sets.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+NK2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Nama-Karoo.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+NK2_2022 <- NK2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(NK2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+Figure bvcd.
 
 ### Succulent Karoo
 
@@ -366,7 +1106,112 @@ Between 1990 and 2014, the extent of cropland, mining, and artificial waterbodie
 
 The Okiep District in Namaqualand was mined at multiple localities for copper for decades since the mid-1800s. According to @rozendaal2013, mining productivity began to decline rapidly from the mid-1990s and eventually ceased in 2007. Since the closure of the mines, the area has been under rehabilitation, the ceasing of mines is declined through a decline in mine extent on the land cover data (Figure 17) ( @rozendaal2013). Long-term environmental monitoring studies in Namaqualand provide further context to these patterns (Figure 17). Davis et al. (2017) used 30 years of satellite data to detect a significant extension of the growing season across many areas of Namaqualand, driven by shifts in phenology (there was an earlier start and later end to the season). This expansion of the growing period, particularly in the north of Namaqualand, is linked to a combination of factors including climate warming and land-use changes. The analysis found increases in vegetation productivity, especially in previously overgrazed or abandoned areas. David et al., (2017) findings align with those of Hongslo et al. (2009) , who documented a slow regeneration of vegetation cover and species richness in formerly cultivated or grazed communal lands like Concordia. While some areas remained compositionally degraded, others showed recovery particularly where active land management (e.g., fencing, reduced ploughing) had been implemented. This environmental history highlights that observed vegetation trends may not only reflect degradation but also slow ecological recovery due to altered management or climatic shifts (Hongslo et al., 2009; Davis et al., 2017) which could explain the drivers of the notable correlative increase and decline secondary-natural and cropland extents (Figure 17).
 
-![Figure 17. The proportional extent of pressures within the Succulent Karoo biome between 1990 and 2022 land cover sets.](imgs/Plots/Succelent%20Karoo.png)
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Succulent_Karoo.xlsx"
+
+# Read data
+SK <- read_excel(file_path)
+
+# Filter data
+SK_filtered <- SK %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+SK_filtered <- SK_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(SK_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Figure 17. The proportional extent of pressures within the Succulent Karoo biome between 1990 and 2022 land cover sets
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+SK2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Succulent_Karoo.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+SK2_2022 <- SK2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(SK2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+Figure djff.
 
 ### Savanna
 
@@ -380,7 +1225,111 @@ Across savanna ecosystems, the land cover changes reveal a strong correlative re
 
 The role of agriculture and grazing in shaping savanna vegetation structure and function further explains these land cover patterns. @botha2017 studied plant functional responses across a disturbance gradient from maize fields to adjacent rangelands, revealing that intensive farming favours disturbance-adapted ruderal species, while functional diversity remains higher in less disturbed rangelands due to a richer species pool. This shift toward opportunistic traits helps explain the increasing secondary natural vegetation class, reflecting that the ecosystems are altered but not entirely lost. Similarly, @rutherford2010 showed that in the arid Gordonia Duneveld of the southern Kalahari, long-term agricultural transformation creates persistent vegetation states difficult to reverse to original ecological state, driven by feedbacks from altered soil and physical conditions. Together, these studies highlight how land use changes such agriculture and urbanization, and drive habitat loss, patterns captured by the rise of the secondary natural and built-up classes in the land cover data observed for the biome. Mining and human settlements in Postmasburg ( @marais2018) expanded rapidly after 2010 when mining companies relocated worked to the town in 2011 with over 2 500 informal dwellings contributing to the growing area of built-up area captured by the landcover.
 
-![Figure 19. The proportional extent of pressures within the Savanna biome between 1990 and 2022 land cover sets.](imgs/Plots/Savanna.png)
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Savanna.xlsx"
+
+# Read data
+SV <- read_excel(file_path)
+
+# Filter data
+SV_filtered <- SV %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+SV_filtered <- SV_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(SV_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+Figure 19. The proportional extent of pressures within the Savanna biome between 1990 and 2022 land cover sets.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+SV2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Savanna.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+SV2_2022 <- SV2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(SV2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+
 
 ### Azonal Vegetation
 
@@ -394,7 +1343,112 @@ Recurrent droughts exacerbate these agricultural impacts, as they are a signific
 
 South Africa’s timber plantations are located either within or next to indigenous forest and the Indian Ocean Coastal Belt ( @karumbidza2006) and sometimes Azonal Vegetation sits near the Forest ecosystems and as a result are impacted by introduction of plantation. For example, in KwaZulu-Natal, in the Richard’s Bay area, there are industrial timber plantation that are where Azonal Vegetation has been mapped in Mucina and Rutherford (2006) and Dayaram et al., in prep. @karumbidza2006 report that these plantation have led to habitat loss due to conversion of natural land to monoculture plantations, which has associated impacts in reduced streamflow and impacting on indigenous aquatic species. Although at the time of @karumbidza2006 publication there was very little proportion of plantation in the Azonal Vegetation (Figure 21); there increase in secondary-natural extent may suggest that the plantations.
 
-![Figure 21. The proportional extent of pressures within the Azonal Vegetation biome between 1990 and 2022 land cover sets.](imgs/Plots/Azonal.png){fig-align="center"}
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Define file path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Azonal.xlsx"
+
+# Read data
+AZ <- read_excel(file_path)
+
+# Filter data
+AZ_filtered <- AZ %>%
+  filter(YEAR %in% c(1990, 2014, 2018, 2020, 2022),
+             LC7_text != "Natural"
+  )
+
+# Calculate proportional extent by year
+AZ_filtered <- AZ_filtered %>%
+  group_by(YEAR) %>%
+  mutate(proportion = km2_total / sum(km2_total, na.rm = TRUE)) %>%
+  ungroup()
+
+# Define custom colours
+custom_colors <- c(
+  "Built-up" = "black",
+  "Mine" = "red",
+  "Artificial-waterbody" = "blue",
+  "Secondary-natural" = "orange",
+  "Plantation" = "purple",
+  "Cropland" = "brown"
+)
+
+# Static plot (ggplot2) with line plot and no gridlines
+ggplot(AZ_filtered, aes(x = YEAR, y = proportion, color = LC7_text, group = LC7_text)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 2) +
+  scale_color_manual(values = custom_colors) +
+  labs(
+    x = "Year",
+    y = "Proportional extent",
+    color = "Land cover class"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Figure 21. The proportional extent of pressures within the Azonal Vegetation biome between 1990 and 2022 land cover sets.
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# -------------------------------
+# 1. Read data
+# -------------------------------
+AZ2 <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/Azonal.xlsx")
+
+# -------------------------------
+# 2. Filter for 2022 and prepare groups
+
+AZ2_2022 <- AZ2 %>%
+  filter(YEAR == 2022) %>%
+  mutate(
+    group = ifelse(LC7_text == "Natural", "Natural", "Non-natural"),
+    subgroup = ifelse(LC7_text == "Natural", "Natural", LC7_text)
+  ) %>%
+  group_by(group, subgroup) %>%
+  summarise(km2 = sum(km2_total, na.rm = TRUE), .groups = "drop")
+
+# -------------------------------
+# 3. Custom colour scheme (hex values)
+# -------------------------------
+custom_colors <- c(
+  "Natural" = "#00FF00",              # green
+  "Built-up" = "#000000",             # black
+  "Mine" = "#FF0000",                  # red
+  "Artificial-waterbody" = "#0000FF",  # blue
+  "Secondary-natural" = "#FFA500",     # orange
+  "Plantation" = "#800080",           # purple
+  "Cropland" = "#A52A2A"              # brown
+)
+
+# -------------------------------
+# 4. Create stacked bar plot
+# -------------------------------
+ggplot(AZ2_2022, aes(x = group, y = km2, fill = subgroup)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = custom_colors) +
+  labs(
+    x = "",
+    y = "Area (km²)",
+    fill = "Land cover type"
+  ) +
+  theme_minimal() +
+  theme(
+    panel.grid = element_blank(),
+    text = element_text(size = 12)
+  )
+```
+
 :::
 
 ## Approach
