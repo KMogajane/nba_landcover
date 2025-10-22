@@ -77,7 +77,98 @@ The overall extent of natural areas remaining in 2022 varies greatly per biome; 
 
 While all other biomes have lost less than 0.1% of their natural habitat per year, this still contributes to a steady, long-term reduction in natural ecosystems across the country, reflecting a persistent national trend of habitat decline even in biomes where change may be subtle or difficult to detect.
 
-![Table2. The key drivers of habitat loss for mainland South Africa prior to 1990 and between 1990 and 2022, based on the land cover change dataset. This table does not show transitions between all classes, it summarises all transitions between natural areas and anthropogenic land cover / landuse classes.](imgs/Plots/Historical%20and%20recent%20habitat%20loss%20-%20country.png){fig-align="center" width="807"}
+```{r}
+# Load libraries
+library(readxl)
+library(dplyr)
+library(gt)
+library(writexl)
+
+# Read data
+RNHL <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/RemainingNaturalHabitat_and_Loss.xlsx")
+
+# Rename columns with superscript ² and consistent formatting
+colnames(RNHL) <- colnames(RNHL) %>%
+  gsub("Extent \\(km2\\) 1750 \\(Reference\\)", "1750 extent (km²)", .) %>%
+  gsub("Extent \\(km2\\) 1990", "1990 extent (km²)", .) %>%
+  gsub("Extent \\(km2\\) 2014", "2014 extent (km²)", .) %>%
+  gsub("Extent \\(km2\\) 2022", "2022 extent (km²)", .) %>%
+  gsub("Recent Loss [Kk]m2 \\(1990[- ]to[- ]2022\\)", "Recent loss (km²) 1990 to 2022", .) %>%
+  gsub("Percentage Loss \\(1990[- ]2022\\)", "Percentage loss 1990 to 2022", .)
+
+# Format percentage column
+RNHL <- RNHL %>%
+  mutate(
+    `Percentage loss 1990 to 2022` = paste0(
+      round(
+        as.numeric(gsub("%", "", trimws(`Percentage loss 1990 to 2022`))),
+        1
+      ),
+      "%"
+    )
+  )
+
+# Optional: save formatted Excel
+write_xlsx(RNHL, "RemainingNaturalHabitat_and_Loss_formatted.xlsx")
+
+# GT theme function
+theme_my_gt <- function(GT_TBL) {
+  last_row <- nrow(GT_TBL[["_data"]])
+  
+  GT_TBL %>%
+    gt::tab_style(
+      style = list(
+        gt::cell_fill(color = "lightgray"),
+        gt::cell_borders(
+          sides = c("top", "bottom"),
+          color = "black",
+          weight = gt::px(2),
+          style = "solid"
+        ),
+        gt::cell_borders(
+          sides = c("left", "right"),
+          color = "lightgray"
+        ),
+        gt::cell_text(weight = "bold")
+      ),
+      locations = gt::cells_column_labels()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = c("top", "bottom"),
+        color = "gray50",
+        weight = gt::px(1),
+        style = "dotted"
+      ),
+      locations = gt::cells_body()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = c("left", "right"),
+        color = "transparent"
+      ),
+      locations = gt::cells_body()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = "bottom",
+        color = "black",
+        weight = gt::px(2),
+        style = "solid"
+      ),
+      locations = gt::cells_body(rows = last_row)
+    )
+}
+
+# Create GT table
+RNHL %>%
+  gt() %>%
+  theme_my_gt() %>%
+  gt::cols_align(
+    align = "right",
+    columns = `Percentage loss 1990 to 2022`
+  )
+```
 
 ## Biome summaries
 
@@ -213,7 +304,7 @@ Most of the Desert biome’s, 98% (6132 km2), natural habitat is remaining, acco
 
 From 1990 to 2014, mining and cropland areas declined, while secondary-natural vegetation and artificial waterbodies showed slight increases within the Desert biome (Figure 3). Plantations and built-up areas remained largely unchanged. Between 2014 and 2022, built up areas increased, while artificial waterbodies declined and secondary-natural vegetation expanded slightly. Mining continued to decline in extent. Cropland and plantation cover remained relatively unchanged.
 
-The patterns in the Cropland extent decline (Figure 3), could largely be due to water scarcity (as there is a decline in artificial waterbody extent (Figure 3), soil degradation, and limited agricultural viability in Desert ecosystems, this contraction was accompanied by a gradual expansion of secondary-natural vegetation (Figure 3), likely driven by the abandonment of farmlands and mine-closures, allowing for passive ecological recovery (Mutanga et al., 2024; Urban et al., 2024). The decline of mining extent may have been driven by global fluctuations in mineral prices and regulatory tightening ultimately leading to the closure or downscaling of several mines, particularly those with shallow or exhausted deposits (Lotchner et al., 2013; Theobald et al., 2025) [@lotchner2013; @theobald2025]. South Africa also downsized mines, often leading to abandonment of the mining sites (Nel and Binns, 2002; Lotchner et al., 2013; Marias, 2013) [@nel2002; @lotchner2013;@marais2013]. Through land cover data, we observe a trend where a decline in mine extent, is correlated to an increase in the increase of secondary-natural extent (Figure 3) in the same time periods with the mine closures, suggesting the abandoned mining sites may be passively re-vegetating. Built-up areas expansion around former mining towns and renewable energy zones reflects the growth of peri-urban settlements, infrastructure developments, and new energy installations such as solar farms in remote desert areas (@gaeatlholwe2023). Studies from the United States, United Kingdom and India suggest that land requirements for renewable energy are far more than the land required for fossil fuel reliant energy (@gaeatlholwe2023), this means that more biodiversity is at large risk of loss die to more land requirements.
+The patterns in the Cropland extent decline (Figure 3), could largely be due to water scarcity (as there is a decline in artificial waterbody extent (Figure 3), soil degradation, and limited agricultural viability in Desert ecosystems, this contraction was accompanied by a gradual expansion of secondary-natural vegetation (Figure 3), likely driven by the abandonment of farmlands and mine-closures, allowing for passive ecological recovery (Mutanga et al., 2024; Urban et al., 2024). The decline of mining extent may have been driven by global fluctuations in mineral prices and regulatory tightening ultimately leading to the closure or downscaling of several mines, particularly those with shallow or exhausted deposits (Lotchner et al., 2013; Theobald et al., 2025) [@lotchner2013; @theobald2025]. South Africa also downsized mines, often leading to abandonment of the mining sites (Nel and Binns, 2002; Lotchner et al., 2013; Marias, 2013) [@nel2002; @lotchner2013; @marais2013]. Through land cover data, we observe a trend where a decline in mine extent, is correlated to an increase in the increase of secondary-natural extent (Figure 3) in the same time periods with the mine closures, suggesting the abandoned mining sites may be passively re-vegetating. Built-up areas expansion around former mining towns and renewable energy zones reflects the growth of peri-urban settlements, infrastructure developments, and new energy installations such as solar farms in remote desert areas (Gaetlholwe and Langerman, 2023)[@gaeatlholwe2023]. Studies from the United States, United Kingdom and India suggest that land requirements for renewable energy are far more than the land required for fossil fuel reliant energy (@gaeatlholwe2023), this means that more biodiversity is at large risk of loss die to more land requirements.
 
 Importantly, plantation forestry was effectively absent throughout the period, consistent with the ecological limitations of Desert biome including low soil nutrients, wind erosion, limited rooting depth, and high evapotranspiration (@jurgens2006;Mutanga et al., 2024). Overall, the desert biome appears to be undergoing an ecological transition, marked by a retreat of intensive land uses and the emergence of a mosaic landscape of low-density settlement, natural vegetation recovery, and selective agricultural intensification where hydrological conditions allow. These dynamics are consistent with desertification-response models, which predict natural regrowth in previously disturbed zones under reduced human pressure (Urban et al., 2024; @gaeatlholwe2023 ).
 
