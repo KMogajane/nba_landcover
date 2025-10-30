@@ -81,6 +81,8 @@ Among the various pressures on biodiversity, croplands account for the most exte
 
 ![Figure 1. Total extent of land cover classes since the 1990 till the 2022 land cover datasets for South Africa, this excludes the natural land cover class.](imgs/Country%20-%20Summary%20LCC.jpg){fig-align="center"}
 
+Table to be added here. Still running the cross-tab on R because of lost results.
+
 ## Provincial summaries
 
 ::: {.panel-tabset group="language"}
@@ -88,7 +90,7 @@ Among the various pressures on biodiversity, croplands account for the most exte
 
 The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman. The province is dominated by vegetation that transitions between biomes. Subtropical thicket transitions into savanna in the east, fynbos in the west, and Nama Karoo and grassy ecosystems in the north. Therefore, the Eastern Cape has the potential to support various types of industries of economic importance. These include manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
-Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands (42.9 % of the province plantations (6.8%), built-up areas (22.2%) and mining (<1%) (Figure 2). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major foootprint within the province (<1%).
+Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands (42.9 % of the province plantations (6.8%), built-up areas (22.2%) and mining (\<1%) (Figure 2). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major foootprint within the province (\<1%).
 
 ```{r}
 
@@ -158,7 +160,6 @@ province_plot
 ```
 
 Figure 2. The key forms of habitat loss in the Eastern Cape are various field crops and horticultural crops, human settlements and plantation forestry.
-
 
 ![Figure 3. Rate of recent habitat loss indicator (1990–2022) fo r the Eastern Cape, calculated per terrestrial ec osystem type. Notable habitat loss is observed in the northeastern regions of the province and along the western coastline.](imgs/ec_prov_habitatloss.png){fig-align="center"}
 
@@ -237,7 +238,7 @@ province_plot
 
 ```
 
-Figure 5. The key forms of habitat loss in the Free State are various field crop. 
+Figure 5. The key forms of habitat loss in the Free State are various field crop.
 
 ![Figure 6. Rate of recent habitat loss indicator for the Free State, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the northern portions of the province.](imgs/fs_prov_habitatloss.png){fig-align="center"}
 
@@ -329,7 +330,7 @@ Acid mine drainage is another major challenge within the province due to the min
 
 The KwaZulu-Natal province contains a diverse mix of Savanna, Grassland, Forests, and Indian Ocean Coastal Belt biomes, along with smaller areas of Wetland vegetation. The Savanna biome dominates the low-lying northern and northwestern regions of the province. Grasslands are widespread across the central interior and southern uplands, particularly in the Midlands. Forests occur in fragmented patches along the escarpment, southern Drakensberg, and coastal scarp areas. The Indian Ocean Coastal Belt extends along the eastern coastline, supporting a mosaic of subtropical forest, woodland, and dune vegetation. Consequently, KwaZulu-Natal supports a range of economically important industries, including sugarcane production, commercial agriculture, forestry, and coastal tourism. KwaZulu-Natal has xx district municipalities; Amajuba, Harry Gwala, King Cetshwayo, Ugu, uMgungundlovu, uMkhanyakude, uMzinyathi, uThukela, Zululand, eThekwini and iLembe.
 
-The KwaZulu-Natal province faces a suite of pressures which are the biggest drivers of habitat loss within the province. The primary pressures leading to this loss in KZN are croplands (nearly 12.5% of province), infrastructure (nearly 10% of the province) and plantations (nearly 8%) of the province. Although present, mining does not particularly have the greatest impacts within the province (<1%).
+The KwaZulu-Natal province faces a suite of pressures which are the biggest drivers of habitat loss within the province. The primary pressures leading to this loss in KZN are croplands (nearly 12.5% of province), infrastructure (nearly 10% of the province) and plantations (nearly 8%) of the province. Although present, mining does not particularly have the greatest impacts within the province (\<1%).
 
 ```{r}
 
@@ -397,7 +398,7 @@ province_plot <- plot_province(province_to_plot)
 province_plot
 ```
 
-Figure 19. The key forms of habitat loss in KwaZulu-Natal are various field crops (both commercial and subsistence), human settlements and plantation forestry. 
+Figure 19. The key forms of habitat loss in KwaZulu-Natal are various field crops (both commercial and subsistence), human settlements and plantation forestry.
 
 ![Figure 10. Rate of recent habitat loss indicator for KwaZulu-Natal, 1990–2022, calculated per terrestrial ecosystem type. Note the remarkably high rates of habitat loss in metropolitan areas, the rate of loss calculated between 1990 and 2022.](imgs/kzn_prov_habitatloss.png){fig-align="center"}
 
@@ -409,7 +410,7 @@ South Africa’s timberplantations are located either within or next to indigeno
 
 Limpopo province is predominantly covered by the Savanna biome, with smaller areas of Grassland and Forest biomes. Savanna vegetation spans most of the province, from the Bushveld in the central and western areas to the Lowveld in the northeast. Grassland is limited to high-altitude areas in the south, particularly along the escarpment. Forests are restricted to small, moist patches on mountain slopes and ravines. As a result, there are various key economic activities in the province which include mining, agriculture, construction and manufacturing. Limpopo has xx district municipalities; Capricorn, Mopane, Sekhukhune, Vhembe and Waterberg.
 
-The Limpopo province faces a suite of pressures which are the biggest drivers of habitat loss within the province. The primary pressures leading to this loss in Limpopo are croplands (over 10% of province), infrastructure (nearly 4% of the province). Plantations and mining do not particularly have the greatest impacts within the province (<2%).
+The Limpopo province faces a suite of pressures which are the biggest drivers of habitat loss within the province. The primary pressures leading to this loss in Limpopo are croplands (over 10% of province), infrastructure (nearly 4% of the province). Plantations and mining do not particularly have the greatest impacts within the province (\<2%).
 
 ```{r}
 
@@ -477,7 +478,7 @@ province_plot <- plot_province(province_to_plot)
 province_plot
 ```
 
-Figure 11. The key forms of habitat loss in Limpopo are various field crops. 
+Figure 11. The key forms of habitat loss in Limpopo are various field crops.
 
 ![Figure 12. Rate of recent habitat loss indicator for Limpopo, 1990–2014, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the southern and central portions of the province.](imgs/l_prov_habitatloss.png){fig-align="center"}
 
@@ -489,7 +490,7 @@ Although ecosystems like the Phalaborwa-Timbavati Mopaneveld in the Mopane regio
 
 Mpumalanga province is characterised by a mix of Grassland, Savanna, and Forest biomes. The Grassland biome dominates the central and southwestern high-lying areas of the province, particularly across the Highveld plateau. The Savanna biome occupies the lower regions in the north and east, including the Lowveld and areas near the Kruger National Park. Forests occur in small patches along the escarpment and in moist mountain ravines. The province's diverse ecological zones support a range of economically important industries. Mpumalanga has three district municipalities; Ehlezeni, Gert Sibande and Nkangala. Economically important industries in the province include mining and manufacturing
 
-Habitat loss in Mpumalanga as a result of land clearing for croplands (40.3% of the province)) which is the primary pressure in the provice. Infrastructure in the form of built-up areas (1.25%) and plantations (1% of the province) and mining (<1%). Although having the lowest cover responsbilble within the province, Mpumalanga has a significant mining economy, with documented impacts on biodiversity, particularly on wetlands ( @curtis2024; @hayes2016 ).
+Habitat loss in Mpumalanga as a result of land clearing for croplands (40.3% of the province)) which is the primary pressure in the provice. Infrastructure in the form of built-up areas (1.25%) and plantations (1% of the province) and mining (\<1%). Although having the lowest cover responsbilble within the province, Mpumalanga has a significant mining economy, with documented impacts on biodiversity, particularly on wetlands ( @curtis2024; @hayes2016 ).
 
 ```{r}
 
@@ -557,7 +558,7 @@ province_plot <- plot_province(province_to_plot)
 province_plot
 ```
 
-Figure 13. The key forms of habitat loss in Mpumalanga are various field crops and plantation.  forestry.
+Figure 13. The key forms of habitat loss in Mpumalanga are various field crops and plantation. forestry.
 
 ![Figure 14. Rate of recent habitat loss indicator for Mpumalanga, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the southern and central portions of the province.](imgs/mp_prov_habitatloss.png){fig-align="center"}
 
@@ -565,8 +566,7 @@ Rates of habitat loss are generally higher in the southern and central parts of 
 
 ### Northern Cape
 
-The Northern Cape is a mosaic of the Nama-Karoo, Succulent Karoo, and Savanna biomes. The Nama-Karoo is the most extensive, covering the central, southeastern, and southern parts of the province. The northern and northeastern regions are occupied by the Savanna biome, while the southwestern and western parts are dominated by the Succulent Karoo.
-As a result, various economically important activities are supported by the province. The Northern Cape has xx district municipalities; Frances Baard, John Taolo Gaetswe, Namakwa, Pixley ka Seme and ZF Mgcawu. Economically important industries in the province include mining, agriculture, manufacturing and construction.
+The Northern Cape is a mosaic of the Nama-Karoo, Succulent Karoo, and Savanna biomes. The Nama-Karoo is the most extensive, covering the central, southeastern, and southern parts of the province. The northern and northeastern regions are occupied by the Savanna biome, while the southwestern and western parts are dominated by the Succulent Karoo. As a result, various economically important activities are supported by the province. The Northern Cape has xx district municipalities; Frances Baard, John Taolo Gaetswe, Namakwa, Pixley ka Seme and ZF Mgcawu. Economically important industries in the province include mining, agriculture, manufacturing and construction.
 
 Habitat loss rates in the Northern Cape are significantly lower than the national average, with less than 4% of the province affected by anthropogenic activities. However, extensive mining along the coast and cropland expansion in the Fynbos/ Succulent Karoo transition areas of the far south have had notable local impacts.
 
@@ -651,7 +651,7 @@ Provincial habitat loss rates remain generally low compared to national averages
 
 The North West province contains a mix and transition of Savanna and Grassland biomes. The Savanna biome is dominant, occupying the northern, northeastern, western, northwestern, and southwestern parts of the province. The remaining central, southern, and southeastern areas are dominated by the Grassland biome. Consequently, the province supports a variety of economically important industries including mining, agriculture. The North West province has five district municipalities; Bojanala, Dr Kenneth Kaunda, Dr Ruth Segomotsi Mompati, Gert Sibande and Ngaka Modiri Molema.
 
-The primary pressure in the terrestrial realm in the North West province is habitat loss because of land clearing for croplands (nearly 30% of the province), infrastructure captured as built-up areas (2.5%) and mining (<2%).
+The primary pressure in the terrestrial realm in the North West province is habitat loss because of land clearing for croplands (nearly 30% of the province), infrastructure captured as built-up areas (2.5%) and mining (\<2%).
 
 ```{r}
 
@@ -717,7 +717,8 @@ province_to_plot <- "North West"
 # Generate and display the plot
 province_plot <- plot_province(province_to_plot)
 province_plot
-``` 
+```
+
 Figure 17. The key forms recent habitat loss (2022) in the North West province are various field crop and horticultural crops, human settlement, plantation forestry and mining.
 
 ![Figure 18. Rate of recent habitat loss indicator for North West, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the eastern and central portions of the province.](imgs/nw_prov_habitatloss.png){fig-align="center"}
@@ -728,7 +729,7 @@ Rates of habitat loss are generally higher in the eastern and central parts of t
 
 The Western Cape province contains a mix of Fynbos, Succulent Karoo, Forests, and small patches of Albany Thicket and Grassland biomes. The Fynbos biome is dominant, covering most of the southern and mountainous regions, including the Cape Fold Belt and coastal areas. The Succulent Karoo occupies the arid northwestern interior of the province. Forests are restricted to small patches along the southern coast and mountain ravines. Albany Thicket and Grassland biomes occur in limited areas along the southeastern boundary of the province. Consequently, the Western Cape supports a range of economically important industries. The Western Cape has six district municipalities; Cape Winelands, Central Karoo, City of Cape Town, Garden Route, Overberg and West Coast.
 
-The pressure resulting in habitat loss with the province are croplands and other forms of intensive agriculture (nearly 15% of the province), plantation forestry (2%), infrastructure and settlements (3%) and mining (<1%).
+The pressure resulting in habitat loss with the province are croplands and other forms of intensive agriculture (nearly 15% of the province), plantation forestry (2%), infrastructure and settlements (3%) and mining (\<1%).
 
 ```{r}
 
@@ -794,16 +795,17 @@ province_to_plot <- "Western Cape"
 # Generate and display the plot
 province_plot <- plot_province(province_to_plot)
 province_plot
-``` 
-Figure 19. The key forms recent habitat loss (2022) in the Western Cape province are various field crop and horticultural crops, human settlements and plantation forestry. 
+```
+
+Figure 19. The key forms recent habitat loss (2022) in the Western Cape province are various field crop and horticultural crops, human settlements and plantation forestry.
 
 ![Figure 20. Rate of recent habitat loss indicator for the Western Cape, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the Overberg and Swartland regions of the Cape lowlands.](imgs/wc_prov_lcc_habitatloss.png){fig-align="center"}
 
 Habitat loss rates are generally higher in the lowlands of the Fynbos biome and coastal areas, driven by expanding human settlements and agriculture (Figure 20). In contrast, the arid interior and mountainous regions of the province experience lower rates of habitat loss. Ecosystem types such as Swartland Alluvium Fynbos are categorized as Endangered when ground-truthed and cross-referenced with land cover data, primarily due to ongoing agricultural expansion, particularly vineyards and orchards. Similarly, the Critically Endangered Swartland Shale Renosterveld has been largely converted to agricultural land and further impacted by urban development (@capenature2023; @skowno2021b). The Lourensford Alluvium Fynbos is also undergoing rapid habitat loss, driven primarily by urban expansion and increasing built-up areas. The Cape Lowlands are dominated by urban development, whereas the renosterveld is dominated by agricultural landscapes. As reflected below.
 
-In the Western Cape, the primary pressures on natural vegetation are concentrated particularly in lowland fynbos and renosterveld areas. Renosterveld, which occurs on fertile soils, has been extensively transformed for agriculture. Studies by @ntshanga2021 and @kemper1999 highlight that this transformation has led to severe habitat fragmentation. While larger renosterveld fragments retain more consistent plant communities, smaller fragments exhibit altered composition, reflecting ecological degradation. These altered patches, though still vegetated, are best described as secondary natural vegetation, areas that maintain some natural structure and function but differ from primary vegetation in composition and ecological integrity.
+In the Western Cape, the primary pressures on natural vegetation are concentrated particularly in lowland fynbos and renosterveld areas. Renosterveld, which occurs on fertile soils, has been extensively transformed for agriculture. Studies such as Ntshanga et al (2021) and Kemper et al., (1999)[@ntshanga2021; @kemper1999] highlight that this transformation has led to severe habitat fragmentation. While larger renosterveld fragments retain more consistent plant communities, smaller fragments exhibit altered composition, reflecting ecological degradation. These altered patches, though still vegetated, are best described as secondary natural vegetation, areas that maintain some natural structure and function but differ from primary vegetation in composition and ecological integrity.
 
-In lowland fynbos on nutrient-poor soils and Strandveld, urban expansion, especially around Cape Town and coastal developments has been the main driver of habitat loss and fragmentation. Ntshanga et al. (2021) @ntshanga2021 found that urbanisation has left behind small, isolated remnants of natural vegetation, embedded within highly transformed human-dominated landscapes.
+In lowland fynbos on nutrient-poor soils and Strandveld, urban expansion, especially around Cape Town and coastal developments has been the main driver of habitat loss and fragmentation. Ntshanga et al. (2021) [@ntshanga2021] found that urbanisation has left behind small, isolated remnants of natural vegetation, embedded within highly transformed human-dominated landscapes.
 :::
 
 ## Approach

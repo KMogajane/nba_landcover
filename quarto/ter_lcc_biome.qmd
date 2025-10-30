@@ -78,13 +78,13 @@ The overall extent of natural areas remaining in 2022 varies greatly per biome; 
 While all other biomes have lost less than 0.1% of their natural habitat per year, this still contributes to a steady, long-term reduction in natural ecosystems across the country, reflecting a persistent national trend of habitat decline even in biomes where change may be subtle or difficult to detect.
 
 ```{r}
-# Load libraries
+
 library(readxl)
 library(dplyr)
 library(gt)
 library(writexl)
 
-# Read data
+
 RNHL <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/RemainingNaturalHabitat_and_Loss.xlsx")
 
 # Rename columns with superscript ² and consistent formatting
@@ -1573,7 +1573,7 @@ The re-classified National Land Cover 7 classes are described as follows:\
 Below we summaries description of each land cover class used in this report and whether they are classified as natural or non-natural.
 
 | Land cover class | Description | Natural/ Non-natural classification |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
 | Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
 | Artificial-waterbodies | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
