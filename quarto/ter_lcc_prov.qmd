@@ -75,22 +75,156 @@ google-scholar: true
 
 ## Summary
 
-South Africa’s biodiversity is subject to a complex interplay of natural and anthropogenic pressures.
+South Africa’s biodiversity is subject to a complex interplay of natural and anthropogenic pressures. Among the various pressures on biodiversity, croplands account for the most extensive impact, covering large areas across the country. Built-up areas represent the second most widespread pressure, followed by plantations, which continue to reduce the extent of natural ecosystems. Between 1990 and 2014, cropland and secondary-natural areas expanded noticeably, alongside growth in built-up areas, plantations, mines, and artificial waterbodies (Figure 1). From 2014 to 2022, land cover change continued, with built-up areas stabilising, or increasing subtly and other land cover types experiencing minor fluctuations (Figure 1). Overall, these trends reflect the ongoing transformation of South Africa’s landscapes under combined agricultural, urban, and industrial pressures.
 
-Among the various pressures on biodiversity, croplands account for the most extensive impact, covering large areas across the country. Built-up areas represent the second most widespread pressure, followed by plantations, which continue to exert considerable influence on natural ecosystems.At the national scale, both cropland and secondary-natural areas increased substantially between 1990 and 2014. During the same period, built-up areas, plantations, mine, and artificial waterbodies also expanded, though to a lesser extent. Between 2014 and 2018, most land cover classes continued to increase, with notable gains in built-up, plantation, and secondary-natural extents, while cropland and artificial waterbodies declined. From 2018 to 2022, a slight decline was observed in mine and secondary-natural areas. Built-up extent remained largely unchanged, whereas plantations, cropland, and artificial waterbodies showed slight increases.
+![Figure 1. Trends in the total extent of land cover classes in South Africa from 1990 to 2022, excluding the natural land cover class.](imgs/Country%20-%20Summary%20LCC.jpg){fig-align="center"}
 
-![Figure 1. Total extent of land cover classes since the 1990 till the 2022 land cover datasets for South Africa, this excludes the natural land cover class.](imgs/Country%20-%20Summary%20LCC.jpg){fig-align="center"}
+```{r}
+# Load libraries
+library(dplyr)
+library(tidyr)
+library(readr)
 
-Table to be added here. Still running the cross-tab on R because of lost results.
+# File path
+file_path <- "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/Biome_ProvincialSummaries/outputs/prov_lc_summary_all_years.csv"
+
+# Load the data
+PNL <- read_csv(file_path)
+
+# Filter for Natural land cover
+PNL_natural <- PNL %>% 
+  filter(LC_text == "Natural")
+
+# Pivot wider to have separate columns for 1990 and 2022 km2
+PNL_wide <- PNL_natural %>%
+  select(PROVINCE, YEAR, LC, km2) %>%
+  pivot_wider(names_from = YEAR, values_from = km2, names_prefix = "km2_") %>%
+  # Replace NA with 0
+  mutate(
+    km2_1990 = ifelse(is.na(km2_1990), 0, km2_1990),
+    km2_2022 = ifelse(is.na(km2_2022), 0, km2_2022)
+  )
+
+# Calculate Recent Loss km² and Percentage Loss
+PNL_loss <- PNL_wide %>%
+  mutate(
+    `Recent Loss km²` = km2_1990 - km2_2022,
+    `Percentage Loss 1990 to 2022` = paste0(round((km2_1990 - km2_2022) / km2_1990 * 100, 1), "%")
+  )
+
+# View the result
+print(PNL_loss)
+
+# Optional: save to CSV
+write_csv(PNL_loss, "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/Biome_ProvincialSummaries/outputs/prov_natural_loss_summary.csv")
+
+
+```
+
+The country's overall recent natural habitat loss from 1990 to 2022 varies greatly across provinces. Provinces with a high proportion of multiple land uses at large scales have Gauteng has the highest recent los
+
+```{r}
+library(dplyr)
+library(readr)
+library(gt)
+library(scales)  # added for number formatting
+
+# Load data
+PNL <- read_csv("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/Biome_ProvincialSummaries/outputs/prov_natural_loss_summary.csv")
+
+# Clean and prepare data
+PNL <- PNL %>%
+  # Remove LC column and filter out unwanted province
+  select(-LC) %>%
+  filter(PROVINCE != "Island - mainland marine") %>%
+  # Round extent and loss columns to whole numbers
+  mutate(
+    km2_1990 = round(km2_1990, 0),
+    km2_2014 = round(km2_2014, 0),
+    km2_2022 = round(km2_2022, 0),
+    `Recent Loss km²` = round(`Recent Loss km²`, 0)
+  ) %>%
+  # Rename columns with km² superscript labels
+  rename(
+    `1990 extent (km²)` = km2_1990,
+    `2014 extent (km²)` = km2_2014,
+    `2022 extent (km²)` = km2_2022,
+    `Recent Loss 1990 to 2022 (km²)` = `Recent Loss km²`
+  )
+
+# Define GT theme function
+theme_my_gt <- function(GT_TBL) {
+  last_row <- nrow(GT_TBL[["_data"]])
+  
+  GT_TBL %>%
+    gt::tab_style(
+      style = list(
+        gt::cell_fill(color = "lightgray"),
+        gt::cell_borders(
+          sides = c("top", "bottom"),
+          color = "black",
+          weight = gt::px(2),
+          style = "solid"
+        ),
+        gt::cell_borders(
+          sides = c("left", "right"),
+          color = "lightgray"
+        ),
+        gt::cell_text(weight = "bold")
+      ),
+      locations = gt::cells_column_labels()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = c("top", "bottom"),
+        color = "gray50",
+        weight = gt::px(1),
+        style = "dotted"
+      ),
+      locations = gt::cells_body()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = c("left", "right"),
+        color = "transparent"
+      ),
+      locations = gt::cells_body()
+    ) %>%
+    gt::tab_style(
+      style = gt::cell_borders(
+        sides = "bottom",
+        color = "black",
+        weight = gt::px(2),
+        style = "solid"
+      ),
+      locations = gt::cells_body(rows = last_row)
+    )
+}
+
+# Create GT table with thousand separators and alignment
+PNL %>%
+  gt() %>%
+  theme_my_gt() %>%
+  gt::fmt_number(
+    columns = c(`1990 extent (km²)`, `2014 extent (km²)`, `2022 extent (km²)`, `Recent Loss 1990 to 2022 (km²)`),
+    decimals = 0,
+    sep_mark = " "
+  ) %>%
+  gt::cols_align(
+    align = "right",
+    columns = `Percentage Loss 1990 to 2022`
+  )
+
+```
 
 ## Provincial summaries
 
 ::: {.panel-tabset group="language"}
 ### Eastern Cape
 
-The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman. The province is dominated by vegetation that transitions between biomes. Subtropical thicket transitions into savanna in the east, fynbos in the west, and Nama Karoo and grassy ecosystems in the north. Therefore, the Eastern Cape has the potential to support various types of industries of economic importance. These include manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
+The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman. The province is dominated by vegetation that transitions between biomes. Subtropical thicket transitions into savanna in the east, fynbos in the west, and Nama-Karoo and grassy ecosystems in the north. Therefore, the Eastern Cape has the potential to support various types of industries of economic importance. These include manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
-Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands (42.9 % of the province plantations (6.8%), built-up areas (22.2%) and mining (\<1%) (Figure 2). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major foootprint within the province (\<1%).
+Land cover data shows the primary pressures within the terrestrial realm of the Eastern Cape driving loss of habitat due to clearing of land for croplands, plantations, , built-up areas and mining (Figure 2). Rates of habitat loss are generally higher in the eastern parts of the province driven by expanding human settlements, agriculture and plantations (Figure 4). Mining does not have a major footprint within the province (\<1%).
 
 ```{r}
 
@@ -159,7 +293,7 @@ province_plot
 
 ```
 
-Figure 2. The key forms of habitat loss in the Eastern Cape are various field crops and horticultural crops, human settlements and plantation forestry.
+Figure 2. The key forms of habitat loss in the Eastern Cape are various crops, infrastructure and plantation forestry.
 
 ![Figure 3. Rate of recent habitat loss indicator (1990–2022) fo r the Eastern Cape, calculated per terrestrial ec osystem type. Notable habitat loss is observed in the northeastern regions of the province and along the western coastline.](imgs/ec_prov_habitatloss.png){fig-align="center"}
 
@@ -169,7 +303,7 @@ The northern parts of the Eastern Cape province have Grasslands as mentioned ear
 
 ### Free State
 
-The Free State province consists of four district municipalities: Fezile Dabi, Lejweleputswa, Mangaung, Thabo Mofutsanyane and Xhariep. Grasslands dominate across the province, with some occurrences of Azonal Vegetation whose distribution is driven by water and moisture availability, mainly along rivers, streams, drainage lines and areaswith high soil moisture content. Fragments of the Savanna and Nama-Karoo biomes are found in the western and southwestern parts of the province, respectively. The Free State province supports various industries of economic importance. These include mining, agriculture and manufacturing (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
+The Free State province consists of four district municipalities: Fezile Dabi, Lejweleputswa, Mangaung, Thabo Mofutsanyane and Xhariep. Grasslands dominate across the province, with some occurrences of Azonal Vegetation whose distribution is driven by water and moisture availability, mainly along rivers, streams, drainage lines and areas with high soil moisture content. Fragments of the Savanna and Nama-Karoo biomes are found in the western and southwestern parts of the province, respectively. The Free State province supports various industries of economic importance. These include mining, agriculture and manufacturing (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
 ```{r}
 
@@ -238,13 +372,13 @@ province_plot
 
 ```
 
-Figure 5. The key forms of habitat loss in the Free State are various field crop.
+Figure 5. The key forms of habitat loss in the Free State are various field crops.
 
 ![Figure 6. Rate of recent habitat loss indicator for the Free State, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the northern portions of the province.](imgs/fs_prov_habitatloss.png){fig-align="center"}
 
-Major economic activities in the province are mining and agriculture (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). These economic activities coincide with the land cover data for the province (Figure 5). Habitat loss in the Free State province is most pronounced in the central to northwestern regions. The Vaal-Vet Sandy Grassland (Figure 6), which spans the boundary between the Free State and North-West provinces, and in both the Fezile Dabi and Lejweleputswa Districts. Another ecosystem type with a high rate of habitat loss in the province is the Eastern Free State Clay Grassland which extends across the eastern region of the province and is within the Thabo Mofutsanyane district (Figure 6). These ecosystem types occupy (xyz % of of the province, xx km2 and xx km2 respectively). They both stand out as the most impacted by land use within the province due to their high rates of recent habitat loss. Land cover shows that croplands, plantations and build-up areas (Figure 5) are the biggest drivers of habitat loss within the province. These land cover statistics are in consistent with economic data showing the agriculture, forestry, mining and urban expansion are the main activities with the province (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
+Major economic activities in the province are mining and agriculture (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). These economic activities coincide with the land cover data for the province (Figure 5). Habitat loss in the Free State province is most pronounced in the central, eastern and northwestern regions, particularly with Fezile Dabi, Thabo Mofutsanyane and Lejweleputswa districts (Figure 6). Land cover data shows that croplands, plantations and build-up areas (Figure 5) are the biggest drivers of habitat loss within the province. These land cover statistics are in consistent with economic data showing the agriculture, forestry, mining and urban expansion are the main activities with the province (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
 
-Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified habitat fragmentation (@brand2009; @slooten2023), and these are dominant pressures within the Grasslands, particularly in the Free State province. his also supported by the increase in the agriculture sector of the province increasing contribution towards the province's GDP between 2010 and 2024 (The Real Economy Bulletin, 2024). In addition, land cover data (Figure 5) indicate that built-up areas are also playing a substantial role in the continued loss of natural habitat. Although mining has a small footprint within the province, the impacts on biodiversity are long lasting.
+Grasslands are also extensively used for grazing by livestock and game but increasing agricultural expansion and intensification have intensified habitat fragmentation (@brand2009; @slooten2023), and these are dominant pressures within the Grasslands, particularly in the Free State province. This also supported by the increase in the agriculture sector of the province increasing contribution towards the province's GDP between 2010 and 2024 (The Real Economy Bulletin, 2024). In addition, land cover data (Figure 5) indicate that built-up areas are also playing a substantial role in the continued loss of natural habitat. Although mining has a small footprint within the province, the impacts on biodiversity are long lasting.
 
 ### Gauteng
 
@@ -316,15 +450,13 @@ province_plot <- plot_province(province_to_plot)
 province_plot
 ```
 
-Figure 7. The key forms of habitat loss in Gauteng are various field crops and human settlements.
+Figure 7. The key forms of habitat loss in Gauteng are infrastructure and various crops.
 
 ![Figure 8. Rate of recent habitat loss indicator for Gauteng, 1990–2022, calculated per terrestrial ecosystem type. Note the remarkably high rates of habitat loss in metropolitan areas, the rate of loss calculated between 1990 and 2022.](imgs/g_prov_habitatloss.png){fig-align="center"}
 
-Rates of habitat loss are remarkably high throughout the province but are highest in the metropolitan areas (City of Johannesburg and Tshwane). Ecosystems such as the Egoli Granite Grassland are listed as critically endangered (@skowno2021b), due to due on-going decline in natural habitat driven primarily by urban and road development , similarly, the Marikana Thornveld experiences the same pressure in Gauteng region (40% with the Gauteng province).Other ecosystem types like the Tsakane Clay Grassland (77% of the province) are under pressure due to croplands.
+Rates of habitat loss are high throughout the province but are highest in the City of Johannesburg. Some ecosystems within the province are listed as Critically Endangered [@skowno2021b], due to on-going decline in natural habitat driven primarily by urban and road development. Another driver of habitat loss is croplands.
 
-Nhamo et al (2021) @nhamo2021 explain that habitat loss in Gauteng Province is predominantly driven by rapid urbanisation, which has led to substantial expansion of the built-up area. They report that between 1986 and 2019, built-up areas increased by over 170%, transforming significant portions of both Critical Biodiversity Areas (CBAs) and Ecological Support Areas (ESAs). Agricultural expansion contributed to 40.9% of this habitat loss, while urban development accounted for an additional 15.1%. The most affected areas include urban peripheries where informal settlements and cleared land have rapidly replaced vegetated and water-rich zones, particularly around Johannesburg, Tshwane, and Ekurhuleni. These trends explained by @nhamo2021 highlight the observed trends in Figure 7 captured by the land cover data. Mining does not have the lowest footprint in the province (Figure 7); however, it has contributed to habitat loss, water and air pollution due to acid mine drainage, particularly in the Witwatersrand area in Johannesburg (@minnaar2020). Water pollution due to acid mine drainage is particularly a problem as it.
-
-Acid mine drainage is another major challenge within the province due to the mining industry, particularly in the Witwatersrand area in Johannesburg (@minnaar2020). Although mining does not have a major footprint within the province (Figure 7), it's impacts extent beyond the area where mining occurs (@minnaar2020).
+Nhamo et al (2021) [@nhamo2021] study reveals that habitat loss in Gauteng Province is predominantly driven by rapid urbanisation, which has led to substantial expansion of the built-up area. They report that between 1986 and 2019, built-up areas increased by over 170%, transforming significant portions of both Critical Biodiversity Areas (CBAs) and Ecological Support Areas (ESAs). Agricultural expansion contributed to 40.9% of this habitat loss, while urban development accounted for an additional 15.1%. The most affected areas include urban peripheries where informal settlements and cleared land have rapidly replaced vegetated and water-rich zones, particularly around Johannesburg, Tshwane, and Ekurhuleni. These trends explained by Nhamo et al., 2021 [@nhamo2021] highlight the observed trends in Figure 7 captured by the land cover data. Although mining does not have a major footprint within the province as other land cover types (Figure 7), it's impacts extent beyond the area where mining occurs. Mining has contributed to habitat loss, water and air pollution due to acid mine drainage, particularly in the Witwatersrand area in Johannesburg (Minnaar, 2020) [@minnaar2020].
 
 ### KwaZulu-Natal
 
@@ -404,7 +536,7 @@ Figure 19. The key forms of habitat loss in KwaZulu-Natal are various field crop
 
 Habitat loss rates are particularly high in the coastal (eastern) regions of KwaZulu-Natal, where sustained transformation is driven by a combination of expanding human settlements, industrial and residential infrastructure, commercial agriculture, timber plantations, and coastal tourism, ( @kznedtea2024) (Figure 10). Although coastal ecosystems remain the most heavily impacted, some northern interior areas also show exceptionally high rates of habitat loss, indicating that transformation pressures are widespread across the province. Previous land cover change analyses reported that 48% of the South Coast was already classified as developed by 2008 (Palmer and van Elst, 2023). This transformation was attributed to roadside strip of development, industrial expansion, and the construction of road infrastructure supporting residential growth (Palmer and van der Elst, 2013). Similarly, a province-wide assessment found that by 2011, 46.4% of KwaZulu-Natal’s natural habitat had been converted for various land uses including. agriculture, the built environment, plantations, mining, and dam development, transforming 46% of the natural habitat of the province ( @jewitt2015). These patterns reflect the land cover data as in Figure 9 and align closely with the key drivers of land-cover transformation identified in earlier @palmer2012.
 
-South Africa’s timberplantations are located either within or next to indigenous forest (@karumbidza2006). Land cover data from 2022 (Figure 9) indicates that plantations cover 18.6% of the province. Some industrial timber plantations (ITP) within KZN are in the coastal zone including Richards Bay and St. Lucia where there is high density of these ITPs ( @karumbidza2006).  Plantations led to habitat loss due to conversion of natural land to a single crop in each area which has associated impacts in reduced streamflow and impacting on indigenous aquatic species.
+South Africa’s timber plantations are located either within or next to indigenous forest (@karumbidza2006). Land cover data from 2022 (Figure 9) indicates that plantations cover 18.6% of the province. Some industrial timber plantations (ITP) within KZN are in the coastal zone including Richards Bay and St. Lucia where there is high density of these ITPs ( @karumbidza2006).  Plantations led to habitat loss due to conversion of natural land to a single crop in each area which has associated impacts in reduced stream flow and impacting on indigenous aquatic species.
 
 ### Limpopo
 
@@ -478,19 +610,19 @@ province_plot <- plot_province(province_to_plot)
 province_plot
 ```
 
-Figure 11. The key forms of habitat loss in Limpopo are various field crops.
+Figure 11. The key forms of habitat loss in Limpopo are various field crops and infrastructure.
 
 ![Figure 12. Rate of recent habitat loss indicator for Limpopo, 1990–2014, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the southern and central portions of the province.](imgs/l_prov_habitatloss.png){fig-align="center"}
 
-Rates of habitat loss are generally higher in the southern and central parts of the province (the Sekhukhune District in particular) (Figure 12). The Sekhukhune Plains Bushveld ecosystem type is endangered according to the 2022 RLE ( @skowno2021b) due to on-going habitat loss which is primarily driven by croplands, urban development and mining. Another ecosystem type within the province that has experienced the highest habitat loss is the Woodbush Granite Grassland, primarily because of plantations which have been the key pressure to this ecosystem and have resulted in fragmentation of this ecosystem type ( @niemandt2016).
+Rates of habitat loss are generally higher in the southern and central parts of the province (the Capricorn and Sekhukhune districts in particular) (Figure 12). There are a number of ecosystems that are listed as Endangered according to the 2022 RLE (Skowno and Monyeki, 2021b)[@skowno2021b] due to on-going habitat loss which is primarily driven by croplands, urban development and mining. Another ecosystem type within the province that the highest habitat lo, primarily because of plantations which have been the key pressure to this ecosystem and have resulted in fragmentation of this ecosystem type (Niemandt and Greve, 2016)[@niemandt2016]. to add which municipality this WGG ecosystem belongs to.
 
-Although ecosystems like the Phalaborwa-Timbavati Mopaneveld in the Mopane region show lower rates of habitat loss than the Woodbush Granite Grassland, they are undergoing structural changes that affect ecosystem function due to intense land use, particularly communal livestock grazing (Rutherford et al., 2012). In the Vhembe Biosphere Reserve, a study by @musetsho2021 found that between 1990 and 2018, dense bush and subsistence agriculture declined, while woodland and built-up areas expanded. This shift, driven by deforestation, agricultural expansion, and urban encroachment, reflects broader Savanna biome trends, where croplands and infrastructure dominate habitat loss. Habitat loss in the area averaged 0.13% per year, highlighting ongoing development pressures and persistent threats to biodiversity.
+Although a large portion of the Mopani district has a low rate of loss, there are ecosystems undergoing structural changes that affect ecosystem function due to intense land use, particularly communal livestock grazing (Rutherford et al., 2013) [@rutherford2013]. In the Vhembe Biosphere Reserve, Musetsho et al., (2021)[@musetsho2021] found that between 1990 and 2018, dense bush and subsistence agriculture declined, while woodland and built-up areas expanded. This shift, driven by deforestation, agricultural expansion, and urban encroachment, reflects broader Savanna biome trends, where croplands and infrastructure dominate habitat loss. Habitat loss in the area averaged 0.13% per year, highlighting ongoing development pressures and persistent threats to biodiversity.
 
 ### Mpumalanga
 
 Mpumalanga province is characterised by a mix of Grassland, Savanna, and Forest biomes. The Grassland biome dominates the central and southwestern high-lying areas of the province, particularly across the Highveld plateau. The Savanna biome occupies the lower regions in the north and east, including the Lowveld and areas near the Kruger National Park. Forests occur in small patches along the escarpment and in moist mountain ravines. The province's diverse ecological zones support a range of economically important industries. Mpumalanga has three district municipalities; Ehlezeni, Gert Sibande and Nkangala. Economically important industries in the province include mining and manufacturing
 
-Habitat loss in Mpumalanga as a result of land clearing for croplands (40.3% of the province)) which is the primary pressure in the provice. Infrastructure in the form of built-up areas (1.25%) and plantations (1% of the province) and mining (\<1%). Although having the lowest cover responsbilble within the province, Mpumalanga has a significant mining economy, with documented impacts on biodiversity, particularly on wetlands ( @curtis2024; @hayes2016 ).
+Habitat loss in Mpumalanga as a result of land clearing for croplands (40.3% of the province) which is the primary pressure in the province. Infrastructure in the form of built-up areas (1.25%) and plantations (1% of the province) and mining (\<1%). Although having the lowest cover responsible within the province, Mpumalanga has a significant mining economy, with documented impacts on biodiversity, particularly on wetlands ( @curtis2024; @hayes2016 ).
 
 ```{r}
 
@@ -562,7 +694,7 @@ Figure 13. The key forms of habitat loss in Mpumalanga are various field crops a
 
 ![Figure 14. Rate of recent habitat loss indicator for Mpumalanga, 1990–2022, calculated per terrestrial ecosystem type. Note the high rate of habitat loss in the southern and central portions of the province.](imgs/mp_prov_habitatloss.png){fig-align="center"}
 
-Rates of habitat loss are generally higher in the southern and central parts of the province (Figure 14). Endangered ecosystem types such as the Legogote Sour Bushveld ( @skowno2021b) have broad range of pressures, but plantations have been the key pressure. Built up areas cover have also been impacting the biodiversity in the province negatively due to expansion of infrastructure and settlements. Although mining covers less than 1% of the provincial extent, it has long-term direct and indirect impacts on species and ecosystems. @laisani2019 study on the Klipspruit mine in Witbank highlighted direct impacts such as contamination on rivers, causing a decline in aquatic biodiversity in the Olifants and Wilge rivers. In addition to polluting aquatic ecosystems, mining has resulted in extensive land degradation, loss of fertile soils, and declining agricultural productivity particularly in maize-producing areas. Air quality conditions are poor in the province due to exceedingly high levels of air pollution ( @groundwork2023).
+Rates of habitat loss are generally higher in the southern and central parts of the province (Figure 14). Endangered ecosystem types such as the Legogote Sour Bushveld ( @skowno2021b) have broad range of pressures, but plantations have been the key pressure. Built up areas cover have also been impacting the biodiversity in the province negatively due to expansion of infrastructure and settlements. Although mining covers less than 1% of the provincial extent, it has long-term direct and indirect impacts on species and ecosystems. @laisani2019 study on the Klipspruit mine in Witbank highlighted direct impacts such as contamination on rivers, causing a decline in aquatic biodiversity in the Olifants and Wilge rivers. In addition to polluting aquatic ecosystems, mining has resulted in extensive land degradation, loss of fertile soils, and declining agricultural productivity particularly in maize-producing areas. Air quality conditions are poor in the province due to exceedingly high levels of air pollution ( @groundwork2023). Since the late 1800s and early 1900s, plantation forestry were mainly concentrated in the Mpumalanga province, and kept increasing in extent to support the country's economic development, accounting for about 40% of the country's plantation forestry (@scholes1995; @geldenhys1997). Recent land cover data (Figure 13) suggest that plantation forestry continue to be the one of the key drivers of habitat loss within Mpumalanga.
 
 ### Northern Cape
 

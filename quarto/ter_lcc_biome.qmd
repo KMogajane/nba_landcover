@@ -73,9 +73,9 @@ google-scholar: true
 
 ## Summary
 
-The overall extent of natural areas remaining in 2022 varies greatly per biome; only 33% of the Indian Ocean Coastal Belt, 58% of Grassland and 67% of Fynbos are in a natural state (Table 1). All the other biomes are in a significantly better overall state with over 80% remaining natural habitat. Recent habitat loss (from 1990 to 2022) varies across biomes with some showing a high rate of recent habitat loss. The Indian Ocean Coastal Belt biome has lost 0.66% of its natural habitat per year between 1990 and 2022, and 0.27% of the Grassland natural habitat has been lost every year between 1990 to 2022. Within the same period, the Fynbos biome has lost 0.19% of its natural habitat per year, trailing behind the Fynbos biome is the Savanna biome losing 0.13% of its natural habitat per year, followed by Azonal Vegetation with a loss of 0.13% per year.
+The overall extent of natural areas remaining in 2022 varies greatly per biome; only 33% of the Indian Ocean Coastal Belt, 58% of Grassland and 67% of Fynbos biomes natural habitat remains according to the 2022 land cover data (Table 1). All the other biomes have a significantly higher natural cover with over 80% remaining natural habitat. Recent habitat loss, from 1990 to 2022, varies across biomes with some showing a high rate of recent habitat loss. The Indian Ocean Coastal Belt biome has the highest recent habitat loss of 21% between 1990 and 2022 (Table 1). The Grassland lost 8.5% between 1990 and 2022, within the same period, the Fynbos biome has lost 5.9%, and the Savanna biome lost 4.1% of its natural habitat, followed by Azonal Vegetation with a 4% loss.
 
-While all other biomes have lost less than 0.1% of their natural habitat per year, this still contributes to a steady, long-term reduction in natural ecosystems across the country, reflecting a persistent national trend of habitat decline even in biomes where change may be subtle or difficult to detect.
+While all other biomes have a natural habitat less than 4% between 1990 and 2022, this still contributes to a steady, long-term reduction in natural habitat across the country, reflecting a persistent national trend of habitat decline even in biomes where change may be subtle or difficult to detect.
 
 ```{r}
 
@@ -83,8 +83,9 @@ library(readxl)
 library(dplyr)
 library(gt)
 library(writexl)
+library(scales)  # for number formatting
 
-
+# Load data
 RNHL <- read_excel("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/R_Project/nba_landcover/data/Biome_Summaries/RemainingNaturalHabitat_and_Loss.xlsx")
 
 # Rename columns with superscript ² and consistent formatting
@@ -93,7 +94,8 @@ colnames(RNHL) <- colnames(RNHL) %>%
   gsub("Extent \\(km2\\) 1990", "1990 extent (km²)", .) %>%
   gsub("Extent \\(km2\\) 2014", "2014 extent (km²)", .) %>%
   gsub("Extent \\(km2\\) 2022", "2022 extent (km²)", .) %>%
-  gsub("Recent Loss [Kk]m2 \\(1990[- ]to[- ]2022\\)", "Recent loss (km²) 1990 to 2022", .) %>%
+  gsub("Recent Loss [Kk]m2 \\(1990[- ]to[- ]2022\\)", "Recent loss 1990 to 2022 (km²)", .) %>%
+  gsub("Recent Loss Km2 \\(1990[- ]2022\\)", "Recent loss 1990 to 2022 (km²)", .) %>%
   gsub("Percentage Loss \\(1990[- ]2022\\)", "Percentage loss 1990 to 2022", .)
 
 # Format percentage column
@@ -160,14 +162,29 @@ theme_my_gt <- function(GT_TBL) {
     )
 }
 
-# Create GT table
+# Create GT table with thousand separators and alignment
 RNHL %>%
   gt() %>%
   theme_my_gt() %>%
+  gt::fmt_number(
+    columns = c(
+      `1750 extent (km²)`,
+      `1990 extent (km²)`,
+      `2014 extent (km²)`,
+      `2022 extent (km²)`,
+      `Recent loss 1990 to 2022 (km²)`
+    ),
+    decimals = 0,
+    sep_mark = " "
+  ) %>%
   gt::cols_align(
     align = "right",
     columns = `Percentage loss 1990 to 2022`
   )
+
+
+
+
 ```
 
 ## Biome summaries
@@ -1573,7 +1590,7 @@ The re-classified National Land Cover 7 classes are described as follows:\
 Below we summaries description of each land cover class used in this report and whether they are classified as natural or non-natural.
 
 | Land cover class | Description | Natural/ Non-natural classification |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
 | Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
 | Artificial-waterbodies | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
