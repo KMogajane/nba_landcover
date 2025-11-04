@@ -1590,7 +1590,7 @@ The re-classified National Land Cover 7 classes are described as follows:\
 Below we summaries description of each land cover class used in this report and whether they are classified as natural or non-natural.
 
 | Land cover class | Description | Natural/ Non-natural classification |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
 | Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
 | Artificial-waterbodies | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
