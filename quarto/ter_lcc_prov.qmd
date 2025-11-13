@@ -121,13 +121,13 @@ write_csv(PNL_loss, "C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane
 
 ```
 
-The country's overall recent natural habitat loss from 1990 to 2022 varies greatly across provinces. Provinces with a high proportion of multiple land uses at large scales have Gauteng has the highest recent los
+The country's overall recent natural habitat loss from 1990 to 2022 varies greatly across provinces. Provinces with a high proportion of multiple land uses at large scales have Gauteng has the highest recent loss.
 
 ```{r}
 library(dplyr)
 library(readr)
 library(gt)
-library(scales)  # added for number formatting
+library(scales) # added for number formatting
 
 # Load data
 PNL <- read_csv("C:/Users/K.Mogajane/OneDrive - sanbi.org.za/Kagiso Mogajane/Research Assistant 2025/LandCoverChangeAnalysis_NBA2025/Biome_ProvincialSummaries/outputs/prov_natural_loss_summary.csv")
@@ -222,7 +222,7 @@ PNL %>%
 ::: {.panel-tabset group="language"}
 ### Eastern Cape
 
-The Eastern Cape consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman. The province is dominated by vegetation that transitions between biomes. Subtropical thicket transitions into savanna in the east, fynbos in the west, and Nama-Karoo and grassy ecosystems in the north. Therefore, the Eastern Cape has the potential to support various types of industries of economic importance. These include manufacturing, construction, agriculture, forestry and fishing, and to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
+The Eastern Cape is dominated by vegetation that transitions between several biomes. Subtropical thicket merges into savanna in the east, fynbos in the west, and Nama-Karoo and grassy ecosystems in the north. Owing to this ecological diversity, the province has the potential to support various industries of economic importance, including manufacturing, construction, agriculture, forestry and fishing, and, to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). It consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman.
 
 Land cover data indicates the main pressures within the terrestrial areas of the Eastern Cape that are contributing to habitat loss, largely due to land being cleared for croplands, plantations, infrastructure and settlements, as well as mining (Figure 2).
 
@@ -303,7 +303,7 @@ The northern parts of the Eastern Cape province have Grasslands as mentioned ear
 
 ### Free State
 
-The Free State province consists of four district municipalities: Fezile Dabi, Lejweleputswa, Mangaung, Thabo Mofutsanyane and Xhariep. Grasslands dominate across the province, with some occurrences of Azonal Vegetation whose distribution is driven by water and moisture availability, mainly along rivers, streams, drainage lines and areas with high soil moisture content. Fragments of the Savanna and Nama-Karoo biomes are found in the western and southwestern parts of the province, respectively. The Free State province supports various industries of economic importance. These include mining, agriculture and manufacturing (Department of National Treasury, 2019; The Real Economy Bulletin, 2024).
+Grasslands dominate across the Free State province, with some occurrences of Azonal Vegetation whose distribution is driven by water and moisture availability, mainly along rivers, streams, drainage lines, and areas with high soil moisture content. Fragments of the Savanna and Nama-Karoo biomes are found in the western and southwestern parts of the province, respectively. The Free State province supports various industries of economic importance, including mining, agriculture, and manufacturing (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). It consists of four district municipalities: Fezile Dabi, Lejweleputswa, Mangaung, Thabo Mofutsanyane, and Xhariep.
 
 ```{r}
 
