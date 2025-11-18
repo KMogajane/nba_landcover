@@ -1,0 +1,9 @@
+---
+title: "ter_lcc_technical_documentation"
+---
+
+## Background 
+This the documentation to show the process of the spatial analysis conducted to report on the pressures to biodiversity across biomes and provinces using land cover data 
+
+#Input data
+We used the South African National Land Cover developed by SANBI adapted from the Department of Forestry, Fisheries and Environment land cover datasets for 1990, 2014, 2018 and 2022. The SANBI Land cover data is a 7 class re-classified land cover dataset. 
