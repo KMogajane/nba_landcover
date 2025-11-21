@@ -224,7 +224,7 @@ PNL %>%
 
 The Eastern Cape is dominated by vegetation that transitions between several biomes. Subtropical thicket merges into savanna in the east, fynbos in the west, and Nama-Karoo and grassy ecosystems in the north. Owing to this ecological diversity, the province has the potential to support various industries of economic importance, including manufacturing, construction, agriculture, forestry and fishing, and, to a lesser extent, mining (Department of National Treasury, 2019; The Real Economy Bulletin, 2024). It consists of eight district municipalities: Amathole, Alfred Nzo, Buffalo City, Chris Hani, Joe Gqabi, Nelson Mandela Bay, O.R. Tambo, and Sarah Baartman.
 
-Land cover data indicates the main pressures within the terrestrial areas of the Eastern Cape that are contributing to habitat loss, largely due to land being cleared for croplands, plantations, infrastructure and settlements, as well as mining (Figure 2).
+Land cover data indicates the main pressures within the terrestrial areas of the Eastern Cape that are contributing to habitat loss, are largely due to land being cleared for croplands, plantations, infrastructure and settlements, as well as mining (Figure 2).
 
 ```{r}
 
@@ -975,7 +975,7 @@ The re-classified National Land Cover 7 classes are described as follows:
 Table 1. Descriptions of the land cover classes used in this report and whether the class is classified as natural or non-natural.
 
 | Land cover class | Description | Natural/ Non-natural classification |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Natural | Areas still in a natural or near-natural state, including indigenous grasslands, shrublands, forests, woodlands, natural bare areas, and natural water bodies | Natural |
 | Secondary-natural | Previously transformed land (e.g., abandoned croplands or mines) now undergoing passive recovery. Vegetation may be returning, but the land remains altered. | Non-natural |
 | Artificial-waterbody | Man-made water features such as dams, canals, sewage ponds, and flooded mine pits, distinct from natural lakes or rivers. | Non-natural |
